@@ -1,903 +1,1236 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fluffies | Waffles que hacen sonreír</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <style>
-    body {
-      font-family: 'Quicksand', sans-serif;
-      background-color: #FFF9F2;
-      color: #5C3D2E;
-    }
-    h1, h2, h3, .font-fredoka {
-      font-family: 'Fredoka', cursive;
-    }
-    .floating-mascot {
-      animation: float 3s ease-in-out infinite;
-    }
-    @keyframes float {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-10px) rotate(2deg); }
-    }
-    .wiggle-hover:hover {
-      animation: wiggle 0.4s ease-in-out infinite alternate;
-    }
-    @keyframes wiggle {
-      0% { transform: rotate(-3deg); }
-      100% { transform: rotate(3deg); }
-    }
-    .custom-scrollbar::-webkit-scrollbar {
-      width: 8px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-track {
-      background: #FFE5EC;
-      border-radius: 10px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: #FF85A1;
-      border-radius: 10px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluffies - Waffles que hacen sonreír 🧇✨</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Fredoka & Quicksand -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        fluffyPink: '#FF8DA1',
+                        fluffySoftPink: '#FFE5EC',
+                        fluffyDarkPink: '#E84A5F',
+                        fluffyYellow: '#FFD166',
+                        fluffyCream: '#FFF8EA',
+                        fluffyBrown: '#6B4226',
+                        fluffyPurple: '#C77DFF'
+                    },
+                    fontFamily: {
+                        fredoka: ['Fredoka', 'sans-serif'],
+                        quicksand: ['Quicksand', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #FFF8EA;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Fredoka', cursive;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(3deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        @keyframes floatSlow {
+            0% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-18px) scale(1.02); }
+            100% { transform: translateY(0px) scale(1); }
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .animate-float-slow {
+            animation: floatSlow 6s ease-in-out infinite;
+        }
+
+        .animate-bounce-in {
+            animation: bounceIn 0.5s ease-out forwards;
+        }
+
+        /* Dynamic Sprinkles Canvas Background */
+        #sprinkles-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Glassmorphism Styling */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.90);
+            backdrop-filter: blur(8px);
+            border: 3px solid #FFE5EC;
+        }
+
+        .glass-card-pink {
+            background: rgba(255, 229, 236, 0.88);
+            backdrop-filter: blur(8px);
+            border: 3px solid #FF8DA1;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FFF8EA;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FF8DA1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #E84A5F;
+        }
+    </style>
 </head>
-<body class="bg-[#FFF9F2] text-[#5C3D2E] min-h-screen flex flex-col justify-between selection:bg-[#FF85A1] selection:text-white">
+<body class="text-fluffyBrown relative selection:bg-fluffyPink selection:text-white">
 
-  <!-- Header / Navigation -->
-  <header class="sticky top-0 z-50 bg-[#FFF0F3]/90 backdrop-blur-md border-b-4 border-[#FFB3C1] shadow-sm">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 bg-[#FF477E] rounded-full flex items-center justify-center text-white font-fredoka text-xl font-bold shadow-md">
-          F
-        </div>
-        <div>
-          <span class="font-fredoka text-2xl font-bold text-[#FF477E] tracking-wide">Fluffies</span>
-          <p class="text-xs text-[#FF758F] font-semibold hidden sm:block">El sabor que une a todos 🍓</p>
-        </div>
-      </div>
-      <nav class="hidden md:flex gap-6 font-fredoka text-lg">
-        <a href="#menu" class="hover:text-[#FF477E] transition-colors">Menú</a>
-        <a href="#combos" class="hover:text-[#FF477E] transition-colors">Combos</a>
-        <a href="#extras" class="hover:text-[#FF477E] transition-colors">Adicionales</a>
-        <a href="#quiz" class="hover:text-[#FF477E] transition-colors">Test de Sabor</a>
-        <a href="#calculadora" class="hover:text-[#FF477E] transition-colors">Arma tu Pedido</a>
-        <a href="#redes" class="hover:text-[#FF477E] transition-colors">Redes</a>
-      </nav>
-      <a href="#calculadora" class="bg-[#FF477E] hover:bg-[#FF2E63] text-white font-fredoka px-4 py-2 rounded-full shadow-lg transition-all transform hover:scale-105 flex items-center gap-2 text-sm sm:text-base">
-        <span>🛒</span>
-        <span>Calcular Pedido</span>
-      </a>
-    </div>
-  </header>
+    <!-- Canvas flotante de chispitas de fondo -->
+    <canvas id="sprinkles-bg"></canvas>
 
-  <!-- Hero Banner -->
-  <section class="relative bg-gradient-to-b from-[#FFF0F3] to-[#FFF9F2] py-12 px-4 overflow-hidden border-b-4 border-dashed border-[#FFB3C1]">
-    <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
-      <div class="md:w-1/2 text-center md:text-left z-10">
-        <span class="bg-[#FFE5EC] text-[#FF477E] font-fredoka px-4 py-1.5 rounded-full text-sm uppercase tracking-wider font-semibold inline-block mb-3 border border-[#FFB3C1]">
-          ✨ Waffles que hacen sonreír ✨
-        </span>
-        <h1 class="text-4xl md:text-6xl font-bold text-[#FF477E] leading-tight mb-4 drop-shadow-sm">
-          ¡Bienvenidos al mundo dulce de <span class="text-[#FF85A1]">Fluffies</span>!
-        </h1>
-        <p class="text-lg md:text-xl text-[#705244] mb-6 font-medium">
-          Descubre nuestros deliciosos waffles artesanales en formas divertidas, combos temáticos e ingredientes súper frescos.
-        </p>
-        <div class="flex flex-wrap gap-4 justify-center md:justify-start">
-          <a href="#quiz" class="bg-[#FF85A1] hover:bg-[#FF477E] text-white font-fredoka px-6 py-3 rounded-full font-bold text-lg shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5">
-            🎯 Descubre tu Waffle ideal
-          </a>
-          <a href="#menu" class="bg-white hover:bg-[#FFF0F3] text-[#FF477E] border-2 border-[#FF85A1] font-fredoka px-6 py-3 rounded-full font-bold text-lg shadow-sm transition-all">
-            📜 Ver Menú
-          </a>
-        </div>
-      </div>
+    <div class="relative z-10 flex flex-col min-h-screen">
 
-      <!-- Mascota Fluffy Interactiva -->
-      <div class="md:w-1/2 flex flex-col items-center justify-center relative">
-        <div class="relative w-64 h-64 sm:w-80 sm:h-80 cursor-pointer floating-mascot group" onclick="speakFluffy()">
-          <!-- SVG Mascota Fluffy (Oso Kawaii) -->
-          <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-xl">
-            <circle cx="100" cy="110" r="75" fill="#FFF2E6" stroke="#5C3D2E" stroke-width="4"/>
-            <!-- Orejas -->
-            <circle cx="45" cy="55" r="25" fill="#FFF2E6" stroke="#5C3D2E" stroke-width="4"/>
-            <circle cx="45" cy="55" r="14" fill="#FFC2D1"/>
-            <circle cx="155" cy="55" r="25" fill="#FFF2E6" stroke="#5C3D2E" stroke-width="4"/>
-            <circle cx="155" cy="55" r="14" fill="#FFC2D1"/>
-            <!-- Mejillas -->
-            <ellipse cx="60" cy="120" rx="12" ry="7" fill="#FF9EAA" opacity="0.6"/>
-            <ellipse cx="140" cy="120" rx="12" ry="7" fill="#FF9EAA" opacity="0.6"/>
-            <!-- Ojos -->
-            <path d="M 65 100 Q 75 90 85 100" stroke="#5C3D2E" stroke-width="5" stroke-linecap="round" fill="none"/>
-            <path d="M 115 100 Q 125 90 135 100" stroke="#5C3D2E" stroke-width="5" stroke-linecap="round" fill="none"/>
-            <!-- Nariz y Boca -->
-            <ellipse cx="100" cy="112" rx="6" ry="4" fill="#5C3D2E"/>
-            <path d="M 94 118 Q 100 126 106 118" stroke="#5C3D2E" stroke-width="4" stroke-linecap="round" fill="none"/>
-            <!-- Waffle en la cabeza -->
-            <g transform="translate(70, 10) scale(0.6)">
-              <polygon points="50,10 85,30 85,70 50,90 15,70 15,30" fill="#F4A261" stroke="#5C3D2E" stroke-width="4"/>
-              <line x1="35" y1="25" x2="65" y2="75" stroke="#E76F51" stroke-width="3"/>
-              <line x1="65" y1="25" x2="35" y2="75" stroke="#E76F51" stroke-width="3"/>
-              <circle cx="50" cy="35" r="8" fill="#FFF" />
-              <circle cx="50" cy="30" r="5" fill="#E63946"/>
-            </g>
-          </svg>
-          <div class="absolute -top-4 right-0 bg-white border-2 border-[#FF85A1] text-[#FF477E] px-3 py-1 rounded-full font-fredoka text-xs font-bold shadow-md opacity-90 group-hover:scale-110 transition-transform">
-            ¡Hazme clic! 🐾
-          </div>
-        </div>
-        <!-- Globo de Diálogo de Fluffy -->
-        <div id="fluffy-dialog" class="mt-2 bg-white border-2 border-[#FF85A1] rounded-2xl p-3 shadow-lg max-w-xs text-center relative transition-all duration-300">
-          <p class="text-sm font-semibold text-[#5C3D2E]">¡Hola! Soy Fluffy 🐻💖 ¿Tienes hambre de algo delicioso hoy?</p>
-        </div>
-      </div>
-    </div>
-  </section>
+        <!-- Bar de Navegación -->
+        <nav class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b-4 border-fluffySoftPink px-4 py-3 shadow-md">
+            <div class="max-w-6xl mx-auto flex justify-between items-center">
+                <a href="#" class="flex items-center gap-2 group">
+                    <span class="text-3xl filter drop-shadow">🧇</span>
+                    <span class="font-heading text-3xl font-bold text-fluffyDarkPink tracking-wide group-hover:scale-105 transition-transform">Fluffies</span>
+                </a>
+                
+                <div class="hidden md:flex items-center gap-6 font-semibold text-lg text-fluffyBrown">
+                    <a href="#tamaños" class="hover:text-fluffyDarkPink transition-colors">Tamaños & Formas</a>
+                    <a href="#combos" class="hover:text-fluffyDarkPink transition-colors">Nuestros Combos</a>
+                    <a href="#extras" class="hover:text-fluffyDarkPink transition-colors">Extras & Adicionales</a>
+                    <a href="#sabores" class="hover:text-fluffyDarkPink transition-colors">Ingredientes</a>
+                    <a href="#quiz" class="hover:text-fluffyDarkPink transition-colors">Test de Sabor</a>
+                </div>
 
-  <!-- Presentación de Tamaños y Formas -->
-  <section id="menu" class="py-12 px-4 max-w-5xl mx-auto w-full">
-    <div class="text-center mb-10">
-      <h2 class="text-3xl md:text-4xl font-bold text-[#FF477E] mb-2">1. Nuestros Tamaños y Formas 🧇</h2>
-      <p class="text-[#705244] font-medium">Preparados al instante con la textura doradita perfecta</p>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <!-- Tamaño Grande -->
-      <div class="bg-white rounded-3xl p-6 border-4 border-[#FFC2D1] shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 relative overflow-hidden flex flex-col justify-between">
-        <div class="absolute top-0 right-0 bg-[#FF477E] text-white font-fredoka px-4 py-1 rounded-bl-2xl font-bold text-sm">
-          Favorito ⭐
-        </div>
-        <div>
-          <div class="w-20 h-20 bg-[#FFE5EC] rounded-2xl flex items-center justify-center text-4xl mb-4 border-2 border-[#FF85A1] text-[#FF477E]">
-            🌸
-          </div>
-          <h3 class="text-2xl font-bold text-[#FF477E] mb-1">Waffle Grande</h3>
-          <p class="text-sm text-[#FF758F] font-semibold mb-3">En delicada forma de Flor</p>
-          <p class="text-[#705244] text-sm mb-4">
-            Perfecto para compartir o darse un gran gusto dulce. Tamaño abundante ideal para combinar muchas capas de toppings.
-          </p>
-        </div>
-        <div class="pt-4 border-t-2 border-dashed border-[#FFE5EC] flex items-center justify-between">
-          <span class="text-xs text-gray-500 font-semibold">Precio Base</span>
-          <span class="text-3xl font-fredoka font-bold text-[#FF477E]">$8.000</span>
-        </div>
-      </div>
-
-      <!-- Tamaño Pequeño -->
-      <div class="bg-white rounded-3xl p-6 border-4 border-[#FFC2D1] shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 relative overflow-hidden flex flex-col justify-between">
-        <div>
-          <div class="w-20 h-20 bg-[#FFE5EC] rounded-2xl flex items-center justify-center text-4xl mb-4 border-2 border-[#FF85A1] text-[#FF477E] gap-1">
-            ❤️/⚪
-          </div>
-          <h3 class="text-2xl font-bold text-[#FF477E] mb-1">Waffle Pequeño</h3>
-          <p class="text-sm text-[#FF758F] font-semibold mb-3">En forma de Corazón ❤️ o Círculo ⚪</p>
-          <p class="text-[#705244] text-sm mb-4">
-            ¡Tú eliges la figura! Ideal para un antojo ligero con un equilibrio exquisito de textura y dulzor.
-          </p>
-        </div>
-        <div class="pt-4 border-t-2 border-dashed border-[#FFE5EC] flex items-center justify-between">
-          <span class="text-xs text-gray-500 font-semibold">Precio Base</span>
-          <span class="text-3xl font-fredoka font-bold text-[#FF477E]">$6.500</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Sección de Combos Especiales -->
-  <section id="combos" class="py-12 px-4 bg-[#FFF0F3] border-y-4 border-[#FFB3C1]">
-    <div class="max-w-5xl mx-auto">
-      <div class="text-center mb-10">
-        <h2 class="text-3xl md:text-4xl font-bold text-[#FF477E] mb-2">2. Nuestros Combos Creados con Amor 🍓</h2>
-        <p class="text-[#705244] font-medium">Combinaciones probadas que enamoran en cada bocado</p>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <!-- Dulce Traición -->
-        <div class="bg-white rounded-3xl p-5 border-2 border-[#FF85A1] shadow-md hover:shadow-xl transition-all flex flex-col justify-between">
-          <div>
-            <div class="text-3xl mb-2">🍑🍪</div>
-            <h3 class="text-xl font-bold text-[#FF477E] font-fredoka mb-1">Dulce Traición</h3>
-            <p class="text-xs text-[#705244] italic mb-3">"Un combo irresistible"</p>
-            <ul class="text-xs space-y-1.5 text-[#5C3D2E] font-medium mb-4">
-              <li class="flex items-center gap-1.5"><span class="text-[#FF85A1]">✔</span> Crema</li>
-              <li class="flex items-center gap-1.5"><span class="text-[#FF85A1]">✔</span> Durazno fresco</li>
-              <li class="flex items-center gap-1.5"><span class="text-[#FF85A1]">✔</span> Galleta Oreo</li>
-              <li class="flex items-center gap-1.5"><span class="text-[#FF85A1]">✔</span> Leche condensada</li>
-            </ul>
-          </div>
-          <div class="pt-3 border-t border-dashed border-gray-200 flex items-center justify-between">
-            <span class="text-xs text-gray-500 font-bold">Grande</span>
-            <span class="text-xl font-fredoka font-bold text-[#FF477E]">$8.000</span>
-          </div>
-        </div>
-
-        <!-- Sugar Rush -->
-        <div class="bg-white rounded-3xl p-5 border-2 border-[#FF85A1] shadow-md hover:shadow-xl transition-all flex flex-col justify-between">
-          <div>
-            <div class="text-3xl mb-2">🍓🍫</div>
-            <h3 class="text-xl font-bold text-[#FF477E] font-fredoka mb-1">Sugar Rush</h3>
-            <p class="text-xs text-[#705244] italic mb-3">"¡Dulzura en cada bocado!"</p>
-            <ul class="text-xs space-y-1.5 text-[#5C3D2E] font-medium mb-4">
-              <li class="flex items-center gap-1.5"><span class="text-[#FF85A1]">✔</span> Crema</li>
-              <li class="flex items-center gap-1.5"><span class="text-[#FF85A1]">✔</span> Fresas jugosas</li>
-              <li class="flex items-center gap-1.5"><span class="text-[#FF85A1]">✔</span> Salsa de chocolate</li>
-              <li class="flex items-center gap-1.5"><span class="text-[#FF85A1]">✔</span> Lluvia de colores</li>
-            </ul>
-          </div>
-          <div class="pt-3 border-t border-dashed border-gray-200 flex items-center justify-between">
-            <span class="text-xs text-gray-500 font-bold">Grande</span>
-            <span class="text-xl font-fredoka font-bold text-[#FF477E]">$8.000</span>
-          </div>
-        </div>
-
-        <!-- Jungle Jam -->
-        <div class="bg-white rounded-3xl p-5 border-2 border-[#FF85A1] shadow-md hover:shadow-xl transition-all flex flex-col justify-between">
-          <div>
-            <div class="text-3xl mb-2">🥝🫐</div>
-            <h3 class="text-xl font-bold text-[#FF477E] font-fredoka mb-1">Jungle Jam</h3>
-            <p class="text-xs text-[#705244] italic mb-3">"¡Frescura y mucho sabor!"</p>
-            <ul class="text-xs space-y-1.5 text-[#5C3D2E] font-medium mb-4">
-              <li class="flex items-center gap-1.5"><span class="text-[#FF85A1]">✔</span> Crema</li>
-              <li class="flex items-center gap-1.5"><span class="text-[#FF85A1]">✔</span> Kiwi fresco</li>
-              <li class="flex items-center gap-1.5"><span class="text-[#FF85A1]">✔</span> Glacé de mora</li>
-              <li class="flex items-center gap-1.5"><span class="text-[#FF85A1]">✔</span> Galleta de vainilla</li>
-            </ul>
-          </div>
-          <div class="pt-3 border-t border-dashed border-gray-200 flex items-center justify-between">
-            <span class="text-xs text-gray-500 font-bold">Grande</span>
-            <span class="text-xl font-fredoka font-bold text-[#FF477E]">$8.000</span>
-          </div>
-        </div>
-
-        <!-- Monkey Chips -->
-        <div class="bg-white rounded-3xl p-5 border-2 border-[#FF85A1] shadow-md hover:shadow-xl transition-all flex flex-col justify-between">
-          <div>
-            <div class="text-3xl mb-2">🍌🍯</div>
-            <h3 class="text-xl font-bold text-[#FF477E] font-fredoka mb-1">Monkey Chips</h3>
-            <p class="text-xs text-[#705244] italic mb-3">"¡El balance perfecto!"</p>
-            <ul class="text-xs space-y-1.5 text-[#5C3D2E] font-medium mb-4">
-              <li class="flex items-center gap-1.5"><span class="text-[#FF85A1]">✔</span> Crema</li>
-              <li class="flex items-center gap-1.5"><span class="text-[#FF85A1]">✔</span> Banano dulcito</li>
-              <li class="flex items-center gap-1.5"><span class="text-[#FF85A1]">✔</span> Arequipe suavecito</li>
-              <li class="flex items-center gap-1.5"><span class="text-[#FF85A1]">✔</span> Chips de chocolate</li>
-            </ul>
-          </div>
-          <div class="pt-3 border-t border-dashed border-gray-200 flex items-center justify-between">
-            <span class="text-xs text-gray-500 font-bold">Grande</span>
-            <span class="text-xl font-fredoka font-bold text-[#FF477E]">$8.000</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Precios Extras / Adicionales -->
-  <section id="extras" class="py-12 px-4 max-w-5xl mx-auto w-full">
-    <div class="text-center mb-10">
-      <span class="bg-[#FFE5EC] text-[#FF477E] font-fredoka px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest border border-[#FFB3C1]">
-        ¿Quieres añadir algo más a tu waffle?
-      </span>
-      <h2 class="text-3xl md:text-4xl font-bold text-[#FF477E] mt-2 mb-2">3. Precios Extras / Adicionales 🤤</h2>
-      <p class="text-[#705244] font-medium">Personaliza o complementa tus waffles con tus ingredientes preferidos</p>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <!-- Salsas Adicionales -->
-      <div class="bg-white rounded-3xl p-6 border-2 border-[#FFB3C1] shadow-md flex flex-col justify-between">
-        <div>
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-xl font-bold text-[#FF477E] font-fredoka">Salsas</h3>
-            <span class="bg-[#FF477E] text-white font-fredoka text-sm px-3 py-1 rounded-full font-bold">$1.000 c/u</span>
-          </div>
-          <p class="text-xs text-gray-500 mb-4">Elige tu salsa favorita para bañar tu waffle:</p>
-          <ul class="text-sm font-semibold space-y-2 text-[#5C3D2E]">
-            <li class="bg-[#FFF0F3] p-2 rounded-xl flex items-center gap-2">🍫 Chocolate</li>
-            <li class="bg-[#FFF0F3] p-2 rounded-xl flex items-center gap-2">🍯 Arequipe</li>
-            <li class="bg-[#FFF0F3] p-2 rounded-xl flex items-center gap-2">🥛 Leche Condensada</li>
-            <li class="bg-[#FFF0F3] p-2 rounded-xl flex items-center gap-2">🍇 Glacé de Mora</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Frutas Adicionales -->
-      <div class="bg-white rounded-3xl p-6 border-2 border-[#FFB3C1] shadow-md flex flex-col justify-between">
-        <div>
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-xl font-bold text-[#FF477E] font-fredoka">Frutas</h3>
-            <span class="bg-[#FF477E] text-white font-fredoka text-sm px-3 py-1 rounded-full font-bold">$2.000 c/u</span>
-          </div>
-          <p class="text-xs text-gray-500 mb-4">Añade más frescura y color natural:</p>
-          <ul class="text-sm font-semibold space-y-2 text-[#5C3D2E]">
-            <li class="bg-[#FFF0F3] p-2 rounded-xl flex items-center gap-2">🍓 Fresa Fresca</li>
-            <li class="bg-[#FFF0F3] p-2 rounded-xl flex items-center gap-2">🍌 Banano</li>
-            <li class="bg-[#FFF0F3] p-2 rounded-xl flex items-center gap-2">🥝 Kiwi</li>
-            <li class="bg-[#FFF0F3] p-2 rounded-xl flex items-center gap-2">🍑 Durazno</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Toppings Adicionales -->
-      <div class="bg-white rounded-3xl p-6 border-2 border-[#FFB3C1] shadow-md flex flex-col justify-between">
-        <div>
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-xl font-bold text-[#FF477E] font-fredoka">Toppings</h3>
-            <span class="bg-[#FF477E] text-white font-fredoka text-sm px-3 py-1 rounded-full font-bold">$800 c/u</span>
-          </div>
-          <p class="text-xs text-gray-500 mb-4">Dale el toque final con texturas crujientes:</p>
-          <ul class="text-sm font-semibold space-y-2 text-[#5C3D2E]">
-            <li class="bg-[#FFF0F3] p-2 rounded-xl flex items-center gap-2">🍪 Galleta Oreo</li>
-            <li class="bg-[#FFF0F3] p-2 rounded-xl flex items-center gap-2">🌾 Galleta Vainilla Triturada</li>
-            <li class="bg-[#FFF0F3] p-2 rounded-xl flex items-center gap-2">🌈 Lluvia de Colores</li>
-            <li class="bg-[#FFF0F3] p-2 rounded-xl flex items-center gap-2">🍫 Chispitas de Chocolate</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- TEST DIVERTIDO ALEATORIO DE SABOR -->
-  <section id="quiz" class="py-12 px-4 bg-[#FFF0F3] border-y-4 border-[#FFB3C1]">
-    <div class="max-w-3xl mx-auto">
-      <div class="text-center mb-8">
-        <span class="bg-[#FF85A1] text-white font-fredoka px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest">
-          ¡Totalmente Impredecible! 🎲
-        </span>
-        <h2 class="text-3xl md:text-4xl font-bold text-[#FF477E] mt-2 mb-2">Test Divertido: Descubre tu Waffle Ideal 🔮</h2>
-        <p class="text-[#705244] font-medium text-sm md:text-base">
-          Responde preguntas aleatorias sin saber el resultado hasta el final. ¡Cada intento es una sorpresa diferente!
-        </p>
-      </div>
-
-      <!-- Card Contenedor del Test -->
-      <div class="bg-white rounded-3xl p-6 md:p-8 border-4 border-[#FF85A1] shadow-xl relative overflow-hidden">
-        <!-- Indicador de Progreso -->
-        <div id="quiz-progress-container" class="mb-6">
-          <div class="flex justify-between text-xs font-bold text-[#FF477E] mb-2">
-            <span id="quiz-step-text">Pregunta 1 de 7</span>
-            <span id="quiz-[#FF85A1]">Sorpresa en camino... 🎁</span>
-          </div>
-          <div class="w-full bg-[#FFE5EC] h-3 rounded-full overflow-hidden">
-            <div id="quiz-bar" class="bg-[#FF477E] h-full transition-all duration-300" style="width: 14%;"></div>
-          </div>
-        </div>
-
-        <!-- Pregunta Dinámica -->
-        <div id="quiz-content" class="min-h-[220px] flex flex-col justify-between">
-          <div>
-            <h3 id="quiz-question" class="text-xl md:text-2xl font-bold text-[#FF477E] font-fredoka mb-6">
-              Cargando pregunta aleatoria...
-            </h3>
-            <div id="quiz-options" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <!-- Las opciones se renderizan dinámicamente -->
+                <div class="flex items-center gap-3">
+                    <!-- Botón de Instagram Agregado -->
+                    <a href="https://www.instagram.com/fluffiesoficiall?utm_source=ig_web_button_share_sheet&rpxt=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 hover:opacity-90 text-white font-heading px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2" title="Síguenos en Instagram">
+                        <i class="fa-brands fa-instagram text-base"></i>
+                        <span class="hidden sm:inline">Instagram</span>
+                    </a>
+                    
+                    <a href="#combos" class="bg-fluffyPink hover:bg-fluffyDarkPink text-white font-heading px-5 py-2 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2">
+                        <i class="fa-solid fa-utensils text-sm"></i>
+                        <span>Ver Menú</span>
+                    </a>
+                </div>
             </div>
-          </div>
-        </div>
+        </nav>
 
-        <!-- Resultado Final -->
-        <div id="quiz-result" class="hidden text-center py-4">
-          <div class="inline-block bg-[#FFE5EC] border-2 border-[#FF85A1] text-[#FF477E] font-fredoka px-4 py-1 rounded-full text-xs font-bold mb-3">
-            🎯 ¡Tu Match Perfecto Encontrado!
-          </div>
-          <h3 id="result-title" class="text-3xl font-bold text-[#FF477E] font-fredoka mb-2">---</h3>
-          <div id="result-match" class="text-2xl font-bold text-[#FF85A1] mb-3">100% Afinidad</div>
-          <p id="result-desc" class="text-[#705244] text-sm max-w-md mx-auto mb-6">---</p>
-          
-          <div class="bg-[#FFF0F3] p-4 rounded-2xl border border-[#FFB3C1] max-w-xs mx-auto mb-6 text-left">
-            <p class="text-xs font-bold text-[#FF477E] uppercase tracking-wider mb-2">Ingredientes que incluye:</p>
-            <ul id="result-ingredients" class="text-xs text-[#5C3D2E] space-y-1 font-medium">
-              <!-- Lista dinámica -->
-            </ul>
-          </div>
+        <!-- Hero Section -->
+        <header class="relative px-4 py-12 md:py-20 max-w-6xl mx-auto w-full">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                
+                <!-- Columna Izquierda Texto -->
+                <div class="lg:col-span-7 text-center lg:text-left space-y-6">
+                    <div class="inline-block bg-fluffySoftPink border-2 border-fluffyPink text-fluffyDarkPink px-4 py-1.5 rounded-full text-sm font-bold shadow-sm tracking-wide">
+                        ✨ ¡El sabor que une a todos!
+                    </div>
+                    
+                    <h1 class="text-4xl sm:text-6xl font-bold text-fluffyBrown leading-tight">
+                        Waffles que hacen <span class="text-fluffyDarkPink underline decoration-fluffyYellow decoration-wavy">sonreír</span> 🧇
+                    </h1>
 
-          <div class="flex flex-wrap gap-3 justify-center">
-            <button onclick="restartQuiz()" class="bg-[#FFE5EC] hover:bg-[#FFC2D1] text-[#FF477E] font-fredoka px-5 py-2.5 rounded-full font-bold text-sm transition-all">
-              🔄 Probar Nuevas Preguntas
+                    <p class="text-xl md:text-2xl text-fluffyBrown/80 font-medium max-w-xl mx-auto lg:mx-0">
+                        Descubre nuestros irresistibles waffles preparados al instante con frutas frescas, crujientes toppings y las salsas más deliciosas 💕.
+                    </p>
+
+                    <div class="flex flex-wrap justify-center lg:justify-start gap-4 pt-2">
+                        <a href="#combos" class="bg-fluffyDarkPink text-white font-heading text-lg px-8 py-4 rounded-3xl shadow-xl hover:bg-fluffyPink hover:shadow-2xl transition-all transform hover:-translate-y-1 flex items-center gap-3">
+                            <i class="fa-solid fa-heart text-fluffyYellow"></i>
+                            Ver Combos
+                        </a>
+                        <a href="#quiz" class="bg-fluffyYellow text-fluffyBrown font-heading text-lg px-8 py-4 rounded-3xl shadow-lg hover:bg-yellow-300 transition-all transform hover:-translate-y-1 flex items-center gap-2">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            Hacer Test Sorpresa
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Columna Derecha Mascota -->
+                <div class="lg:col-span-5 flex flex-col items-center justify-center relative">
+                    <div id="mascot-speech" class="glass-card-pink p-4 rounded-2xl rounded-bl-none shadow-xl mb-4 max-w-xs text-center border-2 border-fluffyPink animate-bounce-in relative cursor-pointer hover:scale-105 transition-transform" onclick="triggerMascotQuote()">
+                        <p class="font-bold text-fluffyDarkPink text-sm sm:text-base" id="speech-text">
+                            ¡Hola! Soy Fluffy 🐶✨ ¡Tócame o realiza el Test Aleatorio para descubrir tu waffle perfecto!
+                        </p>
+                        <span class="text-xs text-fluffyBrown/60 block mt-1">(¡Haz clic en mí! 💕)</span>
+                    </div>
+
+                    <div class="relative cursor-pointer group" onclick="triggerMascotQuote()">
+                        <div class="absolute inset-0 bg-fluffyPink/30 rounded-full blur-2xl group-hover:bg-fluffyPink/50 transition-all"></div>
+                        
+                        <div class="relative w-64 h-64 sm:w-72 sm:h-72 animate-float">
+                            <svg viewBox="0 0 300 300" class="w-full h-full filter drop-shadow-xl">
+                                <!-- Orejas -->
+                                <path d="M 60 110 C 30 70, 20 150, 70 160 Z" fill="#FFEFEF" stroke="#E84A5F" stroke-width="4"/>
+                                <path d="M 240 110 C 270 70, 280 150, 230 160 Z" fill="#FFEFEF" stroke="#E84A5F" stroke-width="4"/>
+                                
+                                <!-- Cabeza y Cuerpo -->
+                                <circle cx="150" cy="150" r="95" fill="#FFF8EA" stroke="#6B4226" stroke-width="5"/>
+                                <ellipse cx="150" cy="170" rx="80" ry="70" fill="#FFFFFF"/>
+                                
+                                <!-- Cachetes -->
+                                <circle cx="100" cy="165" r="14" fill="#FFB7C5" opacity="0.8"/>
+                                <circle cx="200" cy="165" r="14" fill="#FFB7C5" opacity="0.8"/>
+
+                                <!-- Ojos -->
+                                <path d="M 105 140 Q 115 125 125 140" fill="none" stroke="#6B4226" stroke-width="5" stroke-linecap="round"/>
+                                <path d="M 175 140 Q 185 125 195 140" fill="none" stroke="#6B4226" stroke-width="5" stroke-linecap="round"/>
+
+                                <!-- Nariz y Boca -->
+                                <ellipse cx="150" cy="155" rx="8" ry="6" fill="#6B4226"/>
+                                <path d="M 145 163 Q 150 175 155 163" fill="#FF69B4" stroke="#6B4226" stroke-width="3"/>
+
+                                <!-- Sombrero Waffle -->
+                                <g transform="translate(100, 35) rotate(-10)">
+                                    <ellipse cx="50" cy="30" rx="45" ry="22" fill="#F4A261" stroke="#6B4226" stroke-width="4"/>
+                                    <path d="M 20 28 L 80 28 M 25 35 L 75 35 M 35 20 L 35 40 M 50 18 L 50 42 M 65 20 L 65 40" stroke="#E76F51" stroke-width="3"/>
+                                    <path d="M 35 18 C 35 5, 65 5, 65 18 Z" fill="#FFFFFF"/>
+                                    <circle cx="50" cy="8" r="7" fill="#E84A5F"/>
+                                    <path d="M 50 8 C 52 0, 58 -2, 60 -4" fill="none" stroke="#6B4226" stroke-width="2"/>
+                                </g>
+
+                                <!-- Patitas -->
+                                <ellipse cx="100" cy="225" rx="18" ry="14" fill="#FFF8EA" stroke="#6B4226" stroke-width="4"/>
+                                <ellipse cx="200" cy="225" rx="18" ry="14" fill="#FFF8EA" stroke="#6B4226" stroke-width="4"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <p class="text-xs font-semibold text-fluffyDarkPink mt-2 tracking-wide uppercase">
+                        ⭐ Mascota Oficial Fluffies ⭐
+                    </p>
+                </div>
+
+            </div>
+        </header>
+
+        <!-- Sección 1: Tamaños y Formas -->
+        <section id="tamaños" class="py-16 px-4 bg-white/70 border-y-4 border-fluffySoftPink relative">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center max-w-2xl mx-auto mb-12">
+                    <span class="text-fluffyDarkPink font-bold text-sm tracking-widest uppercase bg-fluffySoftPink px-4 py-1 rounded-full">Nuestras Presentaciones</span>
+                    <h2 class="text-3xl sm:text-5xl font-bold text-fluffyBrown mt-3">Tamaños & Formas</h2>
+                    <p class="text-lg text-fluffyBrown/80 mt-2">Nuestros waffles están horneados con formas divertidas y el mejor sabor 🌸❤️</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    
+                    <!-- Grande -->
+                    <div class="glass-card rounded-3xl p-8 text-center relative overflow-hidden group hover:border-fluffyPink transition-all transform hover:-translate-y-2 shadow-xl">
+                        <div class="absolute top-4 right-4 bg-fluffyPink text-white font-heading font-bold px-4 py-1.5 rounded-full text-xl shadow">
+                            $8.000
+                        </div>
+
+                        <div class="w-32 h-32 mx-auto mb-6 flex items-center justify-center bg-fluffySoftPink rounded-full border-4 border-dashed border-fluffyPink group-hover:rotate-12 transition-transform">
+                            <svg viewBox="0 0 100 100" class="w-20 h-20 filter drop-shadow">
+                                <path d="M 50 15 C 60 5, 75 20, 65 35 C 80 30, 90 45, 80 60 C 90 75, 75 85, 60 80 C 50 95, 35 85, 35 75 C 20 85, 10 70, 20 55 C 5 45, 15 30, 30 35 C 30 15, 45 5, 50 15 Z" fill="#E29578" stroke="#6B4226" stroke-width="4"/>
+                                <circle cx="50" cy="50" r="18" fill="#F4A261" stroke="#6B4226" stroke-width="3"/>
+                            </svg>
+                        </div>
+
+                        <h3 class="text-2xl font-bold text-fluffyBrown mb-2">Waffle Grande</h3>
+                        <p class="text-fluffyDarkPink font-semibold text-lg mb-4">🌸 Forma de Flor</p>
+                        <p class="text-fluffyBrown/80 text-sm leading-relaxed mb-6">
+                            Gran tamaño abundante con pétalos crujientes e ideales para compartir con tus acompañamientos favoritos.
+                        </p>
+
+                        <div class="bg-fluffyCream rounded-2xl p-4 border border-fluffySoftPink text-xs text-fluffyBrown font-semibold flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-sparkles text-fluffyYellow text-base"></i>
+                            Disponible en nuestros 4 Combos Especiales
+                        </div>
+                    </div>
+
+                    <!-- Pequeño -->
+                    <div class="glass-card rounded-3xl p-8 text-center relative overflow-hidden group hover:border-fluffyPink transition-all transform hover:-translate-y-2 shadow-xl">
+                        <div class="absolute top-4 right-4 bg-fluffyPink text-white font-heading font-bold px-4 py-1.5 rounded-full text-xl shadow">
+                            $6.500
+                        </div>
+
+                        <div class="w-32 h-32 mx-auto mb-6 flex items-center justify-center bg-fluffySoftPink rounded-full border-4 border-dashed border-fluffyPink group-hover:-rotate-12 transition-transform">
+                            <svg viewBox="0 0 100 100" class="w-20 h-20 filter drop-shadow">
+                                <path d="M 50 30 C 50 15, 20 15, 20 40 C 20 60, 50 80, 50 80 C 50 80, 80 60, 80 40 C 80 15, 50 15, 50 30 Z" fill="#E29578" stroke="#6B4226" stroke-width="4"/>
+                                <circle cx="50" cy="48" r="10" fill="#F4A261"/>
+                            </svg>
+                        </div>
+
+                        <h3 class="text-2xl font-bold text-fluffyBrown mb-2">Waffle Pequeño</h3>
+                        <p class="text-fluffyDarkPink font-semibold text-lg mb-4">❤️ Forma de Corazón o Círculo ⚪</p>
+                        <p class="text-fluffyBrown/80 text-sm leading-relaxed mb-6">
+                            La porción dulce ideal. Puedes elegir tu forma preferida entre un tierno corazón o un círculo clásico.
+                        </p>
+
+                        <div class="bg-fluffyCream rounded-2xl p-4 border border-fluffySoftPink text-xs text-fluffyBrown font-semibold flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-star text-fluffyYellow text-base"></i>
+                            Eliges la forma: Corazón o Circular
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 2: Combos Especiales -->
+        <section id="combos" class="py-16 px-4 max-w-6xl mx-auto w-full">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <span class="text-fluffyDarkPink font-bold text-sm tracking-widest uppercase bg-fluffySoftPink px-4 py-1 rounded-full">Nuestros Combos</span>
+                <h2 class="text-3xl sm:text-5xl font-bold text-fluffyBrown mt-3">Combinaciones Especiales</h2>
+                <p class="text-lg text-fluffyBrown/80 mt-2">Nuestras combinaciones más queridas listas para disfrutar 🍓🍫</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                <!-- Sugar Rush -->
+                <div class="glass-card rounded-3xl p-5 flex flex-col justify-between hover:border-fluffyPink transition-all duration-300 transform hover:-translate-y-2 shadow-lg group">
+                    <div>
+                        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-b from-pink-100 to-pink-200 p-6 text-center mb-4 border border-pink-300">
+                            <span class="absolute top-2 left-2 bg-fluffyDarkPink text-white text-xs font-bold px-2.5 py-1 rounded-full">
+                                Favorito 🔥
+                            </span>
+                            <span class="text-6xl group-hover:scale-110 transition-transform inline-block">🍓</span>
+                        </div>
+
+                        <h3 class="text-xl font-bold text-fluffyBrown">Sugar Rush</h3>
+                        <p class="text-xs font-bold text-fluffyDarkPink mb-2">¡Dulzura en cada bocado!</p>
+
+                        <div class="space-y-1.5 text-xs text-fluffyBrown/90 mb-4">
+                            <p class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-fluffyPink"></i> Crema batida</p>
+                            <p class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-fluffyPink"></i> Fresas</p>
+                            <p class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-fluffyPink"></i> Salsa de Chocolate</p>
+                            <p class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-fluffyPink"></i> Lluvia de Colores</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-xs text-fluffyBrown/60">Tamaño Grande</span>
+                            <span class="font-heading text-xl font-bold text-fluffyDarkPink">$8.000</span>
+                        </div>
+                        <button onclick="openComboModal('sugar-rush')" class="w-full bg-fluffyPink hover:bg-fluffyDarkPink text-white font-heading text-sm py-2.5 rounded-2xl transition-colors flex items-center justify-center gap-2 shadow">
+                            <i class="fa-solid fa-eye"></i> Ver Combo
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Monkey Chips -->
+                <div class="glass-card rounded-3xl p-5 flex flex-col justify-between hover:border-fluffyPink transition-all duration-300 transform hover:-translate-y-2 shadow-lg group">
+                    <div>
+                        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-b from-yellow-100 to-amber-200 p-6 text-center mb-4 border border-amber-300">
+                            <span class="text-6xl group-hover:scale-110 transition-transform inline-block">🍌</span>
+                        </div>
+
+                        <h3 class="text-xl font-bold text-fluffyBrown">Monkey Chips</h3>
+                        <p class="text-xs font-bold text-fluffyDarkPink mb-2">¡El balance perfecto!</p>
+
+                        <div class="space-y-1.5 text-xs text-fluffyBrown/90 mb-4">
+                            <p class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-fluffyPink"></i> Crema batida</p>
+                            <p class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-fluffyPink"></i> Bananos</p>
+                            <p class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-fluffyPink"></i> Arequipe</p>
+                            <p class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-fluffyPink"></i> Chips de Chocolate</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-xs text-fluffyBrown/60">Tamaño Grande</span>
+                            <span class="font-heading text-xl font-bold text-fluffyDarkPink">$8.000</span>
+                        </div>
+                        <button onclick="openComboModal('monkey-chips')" class="w-full bg-fluffyPink hover:bg-fluffyDarkPink text-white font-heading text-sm py-2.5 rounded-2xl transition-colors flex items-center justify-center gap-2 shadow">
+                            <i class="fa-solid fa-eye"></i> Ver Combo
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Dulce Traición -->
+                <div class="glass-card rounded-3xl p-5 flex flex-col justify-between hover:border-fluffyPink transition-all duration-300 transform hover:-translate-y-2 shadow-lg group">
+                    <div>
+                        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-b from-orange-100 to-amber-100 p-6 text-center mb-4 border border-orange-300">
+                            <span class="text-6xl group-hover:scale-110 transition-transform inline-block">🍑</span>
+                        </div>
+
+                        <h3 class="text-xl font-bold text-fluffyBrown">Dulce Traición</h3>
+                        <p class="text-xs font-bold text-fluffyDarkPink mb-2">¡Un combo irresistible!</p>
+
+                        <div class="space-y-1.5 text-xs text-fluffyBrown/90 mb-4">
+                            <p class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-fluffyPink"></i> Crema batida</p>
+                            <p class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-fluffyPink"></i> Durazno</p>
+                            <p class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-fluffyPink"></i> Leche Condensada</p>
+                            <p class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-fluffyPink"></i> Galleta Oreo</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-xs text-fluffyBrown/60">Tamaño Grande</span>
+                            <span class="font-heading text-xl font-bold text-fluffyDarkPink">$8.000</span>
+                        </div>
+                        <button onclick="openComboModal('dulce-traicion')" class="w-full bg-fluffyPink hover:bg-fluffyDarkPink text-white font-heading text-sm py-2.5 rounded-2xl transition-colors flex items-center justify-center gap-2 shadow">
+                            <i class="fa-solid fa-eye"></i> Ver Combo
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Jungle Jam -->
+                <div class="glass-card rounded-3xl p-5 flex flex-col justify-between hover:border-fluffyPink transition-all duration-300 transform hover:-translate-y-2 shadow-lg group">
+                    <div>
+                        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-b from-purple-100 to-emerald-100 p-6 text-center mb-4 border border-purple-300">
+                            <span class="text-6xl group-hover:scale-110 transition-transform inline-block">🥝</span>
+                        </div>
+
+                        <h3 class="text-xl font-bold text-fluffyBrown">Jungle Jam</h3>
+                        <p class="text-xs font-bold text-fluffyDarkPink mb-2">¡Frescura y mucho sabor!</p>
+
+                        <div class="space-y-1.5 text-xs text-fluffyBrown/90 mb-4">
+                            <p class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-fluffyPink"></i> Crema batida</p>
+                            <p class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-fluffyPink"></i> Kiwi Fresco</p>
+                            <p class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-fluffyPink"></i> Glasé de Mora</p>
+                            <p class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-fluffyPink"></i> Galleta Triturada</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-xs text-fluffyBrown/60">Tamaño Grande</span>
+                            <span class="font-heading text-xl font-bold text-fluffyDarkPink">$8.000</span>
+                        </div>
+                        <button onclick="openComboModal('jungle-jam')" class="w-full bg-fluffyPink hover:bg-fluffyDarkPink text-white font-heading text-sm py-2.5 rounded-2xl transition-colors flex items-center justify-center gap-2 shadow">
+                            <i class="fa-solid fa-eye"></i> Ver Combo
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Sección 3: Precios Extras / Adicionales -->
+        <section id="extras" class="py-16 px-4 bg-fluffySoftPink/60 border-y-4 border-fluffyPink relative">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center max-w-2xl mx-auto mb-12">
+                    <span class="text-fluffyDarkPink font-bold text-sm tracking-widest uppercase bg-white px-4 py-1.5 rounded-full border border-fluffyPink shadow-sm">
+                        ¿Quieres añadir algo más a tu waffle? ¡Aquí puedes! 💖
+                    </span>
+                    <h2 class="text-3xl sm:text-5xl font-bold text-fluffyBrown mt-4">Precios Extras / Adicionales</h2>
+                    <p class="text-lg text-fluffyBrown/80 mt-2">Personaliza aún más tu combo agregando tus ingredientes extra favoritos</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    
+                    <!-- Salsas ($1.000) -->
+                    <div class="glass-card rounded-3xl p-6 relative overflow-hidden flex flex-col justify-between hover:border-fluffyDarkPink transition-all shadow-xl">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="font-heading text-xl font-bold text-fluffyBrown">Salsas Adicionales</h3>
+                                <span class="bg-fluffyDarkPink text-white font-bold px-3 py-1 rounded-full text-lg shadow">
+                                    $1.000
+                                </span>
+                            </div>
+                            <p class="text-xs text-fluffyDarkPink font-semibold mb-4">Elige tu salsa favorita:</p>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="bg-white p-3 rounded-2xl border border-pink-200 text-center flex flex-col items-center">
+                                    <span class="text-3xl mb-1">🍫</span>
+                                    <span class="text-xs font-bold text-fluffyBrown">Chocolate</span>
+                                </div>
+                                <div class="bg-white p-3 rounded-2xl border border-pink-200 text-center flex flex-col items-center">
+                                    <span class="text-3xl mb-1">🍯</span>
+                                    <span class="text-xs font-bold text-fluffyBrown">Arequipe</span>
+                                </div>
+                                <div class="bg-white p-3 rounded-2xl border border-pink-200 text-center flex flex-col items-center">
+                                    <span class="text-3xl mb-1">🥛</span>
+                                    <span class="text-xs font-bold text-fluffyBrown">Leche Condensada</span>
+                                </div>
+                                <div class="bg-white p-3 rounded-2xl border border-pink-200 text-center flex flex-col items-center">
+                                    <span class="text-3xl mb-1">🍇</span>
+                                    <span class="text-xs font-bold text-fluffyBrown">Glasé de Mora</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 pt-4 border-t border-pink-200 text-center">
+                            <span class="text-xs text-fluffyBrown/70 italic">Sabor cremoso e intenso</span>
+                        </div>
+                    </div>
+
+                    <!-- Frutas ($2.000) -->
+                    <div class="glass-card rounded-3xl p-6 relative overflow-hidden flex flex-col justify-between hover:border-fluffyDarkPink transition-all shadow-xl">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="font-heading text-xl font-bold text-fluffyBrown">Frutas Adicionales</h3>
+                                <span class="bg-fluffyDarkPink text-white font-bold px-3 py-1 rounded-full text-lg shadow">
+                                    $2.000
+                                </span>
+                            </div>
+                            <p class="text-xs text-fluffyDarkPink font-semibold mb-4">Añade más frescura y sabor:</p>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="bg-white p-3 rounded-2xl border border-pink-200 text-center flex flex-col items-center">
+                                    <span class="text-3xl mb-1">🍓</span>
+                                    <span class="text-xs font-bold text-fluffyBrown">Fresa</span>
+                                </div>
+                                <div class="bg-white p-3 rounded-2xl border border-pink-200 text-center flex flex-col items-center">
+                                    <span class="text-3xl mb-1">🍌</span>
+                                    <span class="text-xs font-bold text-fluffyBrown">Banano</span>
+                                </div>
+                                <div class="bg-white p-3 rounded-2xl border border-pink-200 text-center flex flex-col items-center">
+                                    <span class="text-3xl mb-1">🥝</span>
+                                    <span class="text-xs font-bold text-fluffyBrown">Kiwi</span>
+                                </div>
+                                <div class="bg-white p-3 rounded-2xl border border-pink-200 text-center flex flex-col items-center">
+                                    <span class="text-3xl mb-1">🍑</span>
+                                    <span class="text-xs font-bold text-fluffyBrown">Durazno</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 pt-4 border-t border-pink-200 text-center">
+                            <span class="text-xs text-fluffyBrown/70 italic">Frutas frescas seleccionadas</span>
+                        </div>
+                    </div>
+
+                    <!-- Toppings ($800) -->
+                    <div class="glass-card rounded-3xl p-6 relative overflow-hidden flex flex-col justify-between hover:border-fluffyDarkPink transition-all shadow-xl">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="font-heading text-xl font-bold text-fluffyBrown">Toppings Adicionales</h3>
+                                <span class="bg-fluffyDarkPink text-white font-bold px-3 py-1 rounded-full text-lg shadow">
+                                    $800
+                                </span>
+                            </div>
+                            <p class="text-xs text-fluffyDarkPink font-semibold mb-4">Dale el toque final:</p>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="bg-white p-3 rounded-2xl border border-pink-200 text-center flex flex-col items-center">
+                                    <span class="text-3xl mb-1">🍪</span>
+                                    <span class="text-xs font-bold text-fluffyBrown">Oreo</span>
+                                </div>
+                                <div class="bg-white p-3 rounded-2xl border border-pink-200 text-center flex flex-col items-center">
+                                    <span class="text-3xl mb-1">🥧</span>
+                                    <span class="text-xs font-bold text-fluffyBrown">Galleta de Vainilla</span>
+                                </div>
+                                <div class="bg-white p-3 rounded-2xl border border-pink-200 text-center flex flex-col items-center">
+                                    <span class="text-3xl mb-1">🌈</span>
+                                    <span class="text-xs font-bold text-fluffyBrown">Lluvia de Colores</span>
+                                </div>
+                                <div class="bg-white p-3 rounded-2xl border border-pink-200 text-center flex flex-col items-center">
+                                    <span class="text-3xl mb-1">🍫</span>
+                                    <span class="text-xs font-bold text-fluffyBrown">Chispitas Chocolate</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 pt-4 border-t border-pink-200 text-center">
+                            <span class="text-xs text-fluffyBrown/70 italic">Toppings crujientes y coloridos</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Simular Pedido con Adicionales -->
+                <div class="mt-12 glass-card rounded-3xl p-6 sm:p-8 max-w-3xl mx-auto border-2 border-fluffyPink">
+                    <div class="text-center mb-6">
+                        <h3 class="font-heading text-2xl font-bold text-fluffyDarkPink">
+                            🧮 Simula tu Pedido con Adicionales
+                        </h3>
+                        <p class="text-xs text-fluffyBrown/80">Selecciona tu combo base e integra adiciones para calcular tu total estimado</p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-fluffyBrown mb-1">Elige tu Waffle / Combo Base:</label>
+                                <select id="calc-base" onchange="calculateTotalOrder()" class="w-full bg-white border-2 border-fluffyPink rounded-2xl p-2.5 text-sm font-semibold text-fluffyBrown focus:outline-none">
+                                    <option value="8000">Combo Sugar Rush - Grande ($8.000)</option>
+                                    <option value="8000">Combo Monkey Chips - Grande ($8.000)</option>
+                                    <option value="8000">Combo Dulce Traición - Grande ($8.000)</option>
+                                    <option value="8000">Combo Jungle Jam - Grande ($8.000)</option>
+                                    <option value="6500">Waffle Pequeño Solo ($6.500)</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-fluffyBrown mb-1">Salsas Extra ($1.000 c/u):</label>
+                                <input type="number" id="calc-salsas" min="0" max="5" value="0" onchange="calculateTotalOrder()" class="w-full bg-white border-2 border-fluffyPink rounded-2xl p-2.5 text-sm font-semibold text-fluffyBrown focus:outline-none">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-fluffyBrown mb-1">Frutas Extra ($2.000 c/u):</label>
+                                <input type="number" id="calc-frutas" min="0" max="5" value="0" onchange="calculateTotalOrder()" class="w-full bg-white border-2 border-fluffyPink rounded-2xl p-2.5 text-sm font-semibold text-fluffyBrown focus:outline-none">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-fluffyBrown mb-1">Toppings Extra ($800 c/u):</label>
+                                <input type="number" id="calc-toppings" min="0" max="5" value="0" onchange="calculateTotalOrder()" class="w-full bg-white border-2 border-fluffyPink rounded-2xl p-2.5 text-sm font-semibold text-fluffyBrown focus:outline-none">
+                            </div>
+                        </div>
+
+                        <div class="bg-fluffySoftPink p-4 rounded-2xl flex justify-between items-center mt-4 border border-fluffyPink">
+                            <span class="font-bold text-fluffyBrown text-sm">Valor Total Estimado:</span>
+                            <span class="font-heading text-2xl font-bold text-fluffyDarkPink" id="calc-total">$8.000</span>
+                        </div>
+
+                        <p class="text-center text-xs font-bold text-fluffyDarkPink mt-2">
+                            ¡Haz tu waffle aún más especial! 💕
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Sección 4: Explorador de Ingredientes -->
+        <section id="sabores" class="py-16 px-4 max-w-6xl mx-auto w-full">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <span class="text-fluffyDarkPink font-bold text-sm tracking-widest uppercase bg-fluffySoftPink px-4 py-1 rounded-full">Nuestros Sabores</span>
+                <h2 class="text-3xl sm:text-5xl font-bold text-fluffyBrown mt-3">Explorador de Ingredientes</h2>
+                <p class="text-lg text-fluffyBrown/80 mt-2">Conoce cada uno de los ingredientes que usamos en nuestras recetas 🥝🍓</p>
+            </div>
+
+            <div class="flex justify-center gap-2 sm:gap-4 mb-8">
+                <button onclick="switchTab('salsas')" id="tab-salsas" class="tab-btn bg-fluffyPink text-white font-heading px-5 py-2.5 rounded-full shadow transition-all">
+                    🍯 Salsas
+                </button>
+                <button onclick="switchTab('frutas')" id="tab-frutas" class="tab-btn bg-white text-fluffyBrown font-heading px-5 py-2.5 rounded-full border-2 border-fluffySoftPink hover:border-fluffyPink transition-all">
+                    🍓 Frutas
+                </button>
+                <button onclick="switchTab('toppings')" id="tab-toppings" class="tab-btn bg-white text-fluffyBrown font-heading px-5 py-2.5 rounded-full border-2 border-fluffySoftPink hover:border-fluffyPink transition-all">
+                    🍫 Toppings
+                </button>
+            </div>
+
+            <div id="content-salsas" class="tab-content grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div class="glass-card p-4 rounded-2xl text-center hover:scale-105 transition-transform">
+                    <span class="text-4xl block mb-2">🍫</span>
+                    <h4 class="font-bold text-fluffyBrown">Chocolate</h4>
+                    <p class="text-xs text-fluffyBrown/70 mt-1">Salsa suave de chocolate espeso</p>
+                </div>
+                <div class="glass-card p-4 rounded-2xl text-center hover:scale-105 transition-transform">
+                    <span class="text-4xl block mb-2">🍯</span>
+                    <h4 class="font-bold text-fluffyBrown">Arequipe</h4>
+                    <p class="text-xs text-fluffyBrown/70 mt-1">Dulce de leche tradicional</p>
+                </div>
+                <div class="glass-card p-4 rounded-2xl text-center hover:scale-105 transition-transform">
+                    <span class="text-4xl block mb-2">🥛</span>
+                    <h4 class="font-bold text-fluffyBrown">Leche Condensada</h4>
+                    <p class="text-xs text-fluffyBrown/70 mt-1">El toque dulce cremoso</p>
+                </div>
+                <div class="glass-card p-4 rounded-2xl text-center hover:scale-105 transition-transform">
+                    <span class="text-4xl block mb-2">🍇</span>
+                    <h4 class="font-bold text-fluffyBrown">Glasé de Mora</h4>
+                    <p class="text-xs text-fluffyBrown/70 mt-1">Toque silvestre agridulce</p>
+                </div>
+            </div>
+
+            <div id="content-frutas" class="tab-content hidden grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div class="glass-card p-4 rounded-2xl text-center hover:scale-105 transition-transform">
+                    <span class="text-4xl block mb-2">🍓</span>
+                    <h4 class="font-bold text-fluffyBrown">Fresa</h4>
+                    <p class="text-xs text-fluffyBrown/70 mt-1">Frescas y seleccionadas</p>
+                </div>
+                <div class="glass-card p-4 rounded-2xl text-center hover:scale-105 transition-transform">
+                    <span class="text-4xl block mb-2">🍌</span>
+                    <h4 class="font-bold text-fluffyBrown">Banano</h4>
+                    <p class="text-xs text-fluffyBrown/70 mt-1">Rodajas dulces al punto</p>
+                </div>
+                <div class="glass-card p-4 rounded-2xl text-center hover:scale-105 transition-transform">
+                    <span class="text-4xl block mb-2">🥝</span>
+                    <h4 class="font-bold text-fluffyBrown">Kiwi</h4>
+                    <p class="text-xs text-fluffyBrown/70 mt-1">Aporte fresco y cítrico</p>
+                </div>
+                <div class="glass-card p-4 rounded-2xl text-center hover:scale-105 transition-transform">
+                    <span class="text-4xl block mb-2">🍑</span>
+                    <h4 class="font-bold text-fluffyBrown">Durazno</h4>
+                    <p class="text-xs text-fluffyBrown/70 mt-1">Trozos jugosos en almíbar</p>
+                </div>
+            </div>
+
+            <div id="content-toppings" class="tab-content hidden grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div class="glass-card p-4 rounded-2xl text-center hover:scale-105 transition-transform">
+                    <span class="text-4xl block mb-2">🍪</span>
+                    <h4 class="font-bold text-fluffyBrown">Oreo</h4>
+                    <p class="text-xs text-fluffyBrown/70 mt-1">Galleta de chocolate crujiente</p>
+                </div>
+                <div class="glass-card p-4 rounded-2xl text-center hover:scale-105 transition-transform">
+                    <span class="text-4xl block mb-2">🥧</span>
+                    <h4 class="font-bold text-fluffyBrown">Galleta Vainilla</h4>
+                    <p class="text-xs text-fluffyBrown/70 mt-1">Triturada crujiente</p>
+                </div>
+                <div class="glass-card p-4 rounded-2xl text-center hover:scale-105 transition-transform">
+                    <span class="text-4xl block mb-2">🌈</span>
+                    <h4 class="font-bold text-fluffyBrown">Lluvia de Colores</h4>
+                    <p class="text-xs text-fluffyBrown/70 mt-1">Chispas divertidas</p>
+                </div>
+                <div class="glass-card p-4 rounded-2xl text-center hover:scale-105 transition-transform">
+                    <span class="text-4xl block mb-2">🍫</span>
+                    <h4 class="font-bold text-fluffyBrown">Chips de Chocolate</h4>
+                    <p class="text-xs text-fluffyBrown/70 mt-1">Gotas de puro chocolate</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 5: Test Divertido Aleatorio de Sabor -->
+        <section id="quiz" class="py-16 px-4 bg-white/70 border-t-4 border-fluffySoftPink">
+            <div class="max-w-3xl mx-auto text-center">
+                <span class="text-fluffyDarkPink font-bold text-sm tracking-widest uppercase bg-fluffySoftPink px-4 py-1.5 rounded-full border border-fluffyPink">
+                    🎲 Test Dinámico & Sorpresa
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-bold text-fluffyBrown mt-3 mb-2">Descubre Tu Waffle Gemelo 🧙‍♂️✨</h2>
+                <p class="text-sm text-fluffyBrown/80 mb-6">
+                    Responde 7 a 8 preguntas aleatorias sobre tu personalidad. El resultado se calculará en secreto hasta el final 🤫
+                </p>
+                
+                <div class="glass-card-pink rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+                    
+                    <!-- Progress Bar -->
+                    <div id="quiz-progress-bar" class="w-full bg-white/60 h-3.5 rounded-full mb-6 overflow-hidden border border-fluffyPink">
+                        <div id="quiz-progress-fill" class="bg-fluffyDarkPink h-full transition-all duration-300" style="width: 10%;"></div>
+                    </div>
+
+                    <div id="quiz-question-counter" class="text-xs font-bold text-fluffyDarkPink uppercase tracking-wider mb-2">
+                        Pregunta 1
+                    </div>
+
+                    <div id="quiz-container">
+                        <!-- Preguntas aleatorias renderizadas con JS -->
+                    </div>
+
+                    <!-- Pantalla Final del Resultado -->
+                    <div id="quiz-result" class="hidden animate-bounce-in">
+                        <div class="text-7xl mb-3" id="quiz-icon">🧇</div>
+                        <span id="quiz-match-badge" class="text-xs uppercase tracking-widest font-bold bg-fluffyYellow text-fluffyBrown px-3.5 py-1 rounded-full border border-yellow-400 shadow">
+                            ⚡ 98% de Afinidad
+                        </span>
+                        
+                        <h3 class="text-2xl sm:text-4xl font-bold text-fluffyDarkPink mt-4 mb-2" id="quiz-recommendation-title"></h3>
+                        <p class="text-fluffyBrown font-semibold text-sm sm:text-base mb-6 max-w-lg mx-auto leading-relaxed" id="quiz-recommendation-desc"></p>
+                        
+                        <div class="bg-white/95 p-5 rounded-2xl border-2 border-fluffyPink text-left max-w-md mx-auto mb-6 text-xs text-fluffyBrown shadow-md space-y-2">
+                            <span class="font-bold text-fluffyDarkPink block text-sm border-b border-pink-100 pb-1">
+                                🍓 Ingredientes de tu recomendación:
+                            </span>
+                            <div id="quiz-recommendation-ingredients" class="pt-1"></div>
+                        </div>
+
+                        <div class="flex flex-wrap justify-center gap-3">
+                            <button onclick="openResultModal()" class="bg-fluffyDarkPink hover:bg-fluffyPink text-white font-bold px-6 py-3 rounded-2xl shadow-lg transition-all flex items-center gap-2 transform hover:-translate-y-0.5">
+                                <i class="fa-solid fa-eye"></i> Ver Detalle de Combo
+                            </button>
+                            <button onclick="resetQuiz()" class="bg-white text-fluffyBrown border-2 border-fluffyPink font-bold px-6 py-3 rounded-2xl hover:bg-fluffySoftPink transition-all flex items-center gap-2">
+                                <i class="fa-solid fa-dice text-fluffyDarkPink"></i> Probar Nuevas Preguntas
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-white border-t-4 border-fluffyPink py-8 px-4 mt-auto">
+            <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
+                <div>
+                    <span class="font-heading text-2xl font-bold text-fluffyDarkPink">Fluffies 🧇</span>
+                    <p class="text-xs text-fluffyBrown/70 mt-1">Waffles que hacen sonreír. El sabor que une a todos 💕</p>
+                </div>
+                
+                <!-- Enlace a Instagram en el Footer -->
+                <div class="flex items-center gap-2">
+                    <a href="https://www.instagram.com/fluffiesoficiall?utm_source=ig_web_button_share_sheet&rpxt=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-fluffyDarkPink hover:underline flex items-center gap-1.5 bg-fluffySoftPink px-4 py-2 rounded-full border border-fluffyPink">
+                        <i class="fa-brands fa-instagram text-sm"></i> @fluffiesoficiall
+                    </a>
+                </div>
+
+                <div class="text-xs text-fluffyBrown/60">
+                    © 2026 Fluffies. Todos los derechos reservados.
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Modal Combo Info -->
+    <div id="combo-modal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="glass-card bg-white rounded-3xl max-w-md w-full p-6 relative animate-bounce-in border-4 border-fluffyPink">
+            <button onclick="closeComboModal()" class="absolute top-4 right-4 text-fluffyBrown/60 hover:text-fluffyDarkPink text-2xl font-bold">
+                &times;
             </button>
-            <a href="#calculadora" class="bg-[#FF477E] hover:bg-[#FF2E63] text-white font-fredoka px-6 py-2.5 rounded-full font-bold text-sm shadow-md transition-all">
-              🛒 Pedir este Waffle
-            </a>
-          </div>
+            <div id="modal-content">
+                <!-- Inyectado por JavaScript -->
+            </div>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Calculadora / Simulador de Pedido & Extras -->
-  <section id="calculadora" class="py-12 px-4 max-w-4xl mx-auto w-full">
-    <div class="text-center mb-8">
-      <h2 class="text-3xl md:text-4xl font-bold text-[#FF477E] mb-2">4. Simulador de Pedido & Extras 🧮</h2>
-      <p class="text-[#705244] font-medium">Selecciona tus productos base y agrega tus adicionales para calcular el costo estimado</p>
     </div>
 
-    <div class="bg-white rounded-3xl p-6 md:p-8 border-4 border-[#FFC2D1] shadow-xl grid grid-cols-1 md:grid-cols-2 gap-8">
-      <!-- Opciones de Selección -->
-      <div class="space-y-5">
-        <div>
-          <label class="block text-xs font-bold text-[#FF477E] uppercase tracking-wider mb-2">1. Elige tu Waffle Base o Combo:</label>
-          <select id="calc-base" onchange="calculateTotal()" class="w-full bg-[#FFF0F3] border-2 border-[#FF85A1] text-[#5C3D2E] font-semibold text-sm rounded-2xl p-3 focus:outline-none focus:ring-2 focus:ring-[#FF477E]">
-            <option value="8000|Waffle Grande (Forma Flor)">Waffle Grande Flor ($8.000)</option>
-            <option value="6500|Waffle Pequeño (Corazón o Círculo)">Waffle Pequeño Corazón/Círculo ($6.500)</option>
-            <option value="8000|Combo Sugar Rush">Combo Sugar Rush ($8.000)</option>
-            <option value="8000|Combo Monkey Chips">Combo Monkey Chips ($8.000)</option>
-            <option value="8000|Combo Dulce Traición">Combo Dulce Traición ($8.000)</option>
-            <option value="8000|Combo Jungle Jam">Combo Jungle Jam ($8.000)</option>
-          </select>
-        </div>
+    <!-- Logic Script -->
+    <script>
+        // Mascota Frases
+        const mascotQuotes = [
+            "¡Hola! Mi combo favorito es el Sugar Rush 🍓 ¡Me encanta la fresa!",
+            "¿Sabías que puedes agregar salsas extra por solo $1.000? 🍫",
+            "¡El Waffle Grande tiene forma de Flor 🌸 y es gigante!",
+            "¡Waffles + Salsas + Frutas + Toppings = Felicidad absoluta! 💕",
+            "¿Prefieres el waffle pequeño en forma de corazón o de círculo? ❤️⚪",
+            "¡Agrega galleta Oreo extra por solo $800! 🍪"
+        ];
 
-        <!-- Extras Quantities -->
-        <div class="space-y-3 pt-2">
-          <label class="block text-xs font-bold text-[#FF477E] uppercase tracking-wider">2. Añade Adicionales (Opcional):</label>
-
-          <!-- Extra Salsas -->
-          <div class="flex items-center justify-between bg-[#FFF0F3] p-3 rounded-2xl border border-[#FFB3C1]">
-            <div>
-              <span class="text-xs font-bold text-[#5C3D2E] block">Salsas Adicionales</span>
-              <span class="text-[10px] text-gray-500">$1.000 c/u</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <button onclick="changeExtra('salsas', -1)" class="w-7 h-7 bg-white border border-[#FF85A1] text-[#FF477E] rounded-full font-bold text-sm flex items-center justify-center hover:bg-[#FFE5EC]">-</button>
-              <span id="qty-salsas" class="w-6 text-center font-bold text-sm">0</span>
-              <button onclick="changeExtra('salsas', 1)" class="w-7 h-7 bg-white border border-[#FF85A1] text-[#FF477E] rounded-full font-bold text-sm flex items-center justify-center hover:bg-[#FFE5EC]">+</button>
-            </div>
-          </div>
-
-          <!-- Extra Frutas -->
-          <div class="flex items-center justify-between bg-[#FFF0F3] p-3 rounded-2xl border border-[#FFB3C1]">
-            <div>
-              <span class="text-xs font-bold text-[#5C3D2E] block">Frutas Adicionales</span>
-              <span class="text-[10px] text-gray-500">$2.000 c/u</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <button onclick="changeExtra('frutas', -1)" class="w-7 h-7 bg-white border border-[#FF85A1] text-[#FF477E] rounded-full font-bold text-sm flex items-center justify-center hover:bg-[#FFE5EC]">-</button>
-              <span id="qty-frutas" class="w-6 text-center font-bold text-sm">0</span>
-              <button onclick="changeExtra('frutas', 1)" class="w-7 h-7 bg-white border border-[#FF85A1] text-[#FF477E] rounded-full font-bold text-sm flex items-center justify-center hover:bg-[#FFE5EC]">+</button>
-            </div>
-          </div>
-
-          <!-- Extra Toppings -->
-          <div class="flex items-center justify-between bg-[#FFF0F3] p-3 rounded-2xl border border-[#FFB3C1]">
-            <div>
-              <span class="text-xs font-bold text-[#5C3D2E] block">Toppings Adicionales</span>
-              <span class="text-[10px] text-gray-500">$800 c/u</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <button onclick="changeExtra('toppings', -1)" class="w-7 h-7 bg-white border border-[#FF85A1] text-[#FF477E] rounded-full font-bold text-sm flex items-center justify-center hover:bg-[#FFE5EC]">-</button>
-              <span id="qty-toppings" class="w-6 text-center font-bold text-sm">0</span>
-              <button onclick="changeExtra('toppings', 1)" class="w-7 h-7 bg-white border border-[#FF85A1] text-[#FF477E] rounded-full font-bold text-sm flex items-center justify-center hover:bg-[#FFE5EC]">+</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Resumen y Total -->
-      <div class="bg-[#FFF0F3] rounded-2xl p-5 border-2 border-[#FFB3C1] flex flex-col justify-between">
-        <div>
-          <h3 class="text-lg font-bold text-[#FF477E] font-fredoka mb-3 border-b border-[#FFB3C1] pb-2">Resumen de Selección</h3>
-          <ul class="text-xs text-[#5C3D2E] space-y-2 font-medium">
-            <li class="flex justify-between"><span id="summary-base-name">Waffle Base</span> <span id="summary-base-price" class="font-bold">$0</span></li>
-            <li class="flex justify-between"><span id="summary-salsas-text">0 Salsas extra</span> <span id="summary-salsas-price" class="font-bold">$0</span></li>
-            <li class="flex justify-between"><span id="summary-frutas-text">0 Frutas extra</span> <span id="summary-frutas-price" class="font-bold">$0</span></li>
-            <li class="flex justify-between"><span id="summary-toppings-text">0 Toppings extra</span> <span id="summary-toppings-price" class="font-bold">$0</span></li>
-          </ul>
-        </div>
-
-        <div class="pt-4 border-t-2 border-dashed border-[#FFB3C1] mt-4">
-          <div class="flex justify-between items-end mb-4">
-            <span class="text-xs font-bold text-[#705244] uppercase">Total Estimado</span>
-            <span id="calc-total" class="text-3xl font-fredoka font-bold text-[#FF477E]">$0</span>
-          </div>
-          <button onclick="sendWhatsApp()" class="w-full bg-[#FF477E] hover:bg-[#FF2E63] text-white font-fredoka py-3 rounded-2xl font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2">
-            <span>💬</span> Pedir por WhatsApp
-          </button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SECCIÓN DE REDES SOCIALES (INSTAGRAM) -->
-  <section id="redes" class="py-12 px-4 bg-[#FFF0F3] border-t-4 border-[#FFB3C1]">
-    <div class="max-w-3xl mx-auto text-center">
-      <div class="w-16 h-16 bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 rounded-2xl flex items-center justify-center text-white text-3xl mx-auto mb-4 shadow-md">
-        📸
-      </div>
-      <span class="bg-[#FFE5EC] text-[#FF477E] font-fredoka px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest border border-[#FFB3C1]">
-        ¡Forma parte de la comunidad Fluffies!
-      </span>
-      <h2 class="text-3xl md:text-4xl font-bold text-[#FF477E] mt-2 mb-3">Síguenos en Instagram 💖</h2>
-      <p class="text-[#705244] font-medium text-sm md:text-base max-w-md mx-auto mb-6">
-        Entérate de nuevas promociones, fotos deliciosas de nuestros waffles y sorpresas exclusivas que tenemos para ti.
-      </p>
-
-      <!-- Botón Directo con Enlace a Instagram -->
-      <a href="https://www.instagram.com/fluffiesoficiall?utm_source=ig_web_button_share_sheet&rpxt=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" 
-         class="inline-flex items-center gap-3 bg-gradient-to-r from-[#FF477E] to-[#FF85A1] hover:from-[#FF2E63] hover:to-[#FF477E] text-white font-fredoka px-8 py-4 rounded-full text-lg font-bold shadow-lg transition-all transform hover:scale-105">
-        <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
-          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-        </svg>
-        <span>SÍGUENOS EN INSTAGRAM</span>
-      </a>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="bg-[#5C3D2E] text-[#FFF0F3] py-8 px-4 text-center border-t-4 border-[#FF477E]">
-    <div class="max-w-4xl mx-auto space-y-3">
-      <div class="font-fredoka text-2xl font-bold text-[#FF85A1]">Fluffies 🧇</div>
-      <p class="text-xs text-[#FFC2D1]">"El sabor que une a todos" • Waffles artesanales recién horneados</p>
-      <div class="pt-4 border-t border-[#705244] text-[11px] text-gray-400">
-        © 2026 Fluffies. Todos los derechos reservados.
-      </div>
-    </div>
-  </footer>
-
-  <!-- LÓGICA DE JAVASCRIPT -->
-  <script>
-    // --- 1. BANCO GENERAL DE 15 PREGUNTAS DEL TEST ---
-    const fullQuestionBank = [
-      {
-        q: "1. ¿Cómo te sientes hoy al despertar? ☀️",
-        options: [
-          { text: "Lleno de energía dulce", scores: { sugar: 3, monkey: 1 } },
-          { text: "Tranquilo y relajado", scores: { jungle: 3, dulce: 1 } },
-          { text: "Con antojo de consuelo cremosito", scores: { dulce: 3, monkey: 2 } },
-          { text: "Aventurero e inquieto", scores: { jungle: 2, sugar: 2 } }
-        ]
-      },
-      {
-        q: "2. Si pudieras tener un superpoder postre, ¿cuál sería? ⚡",
-        options: [
-          { text: "Lluvia infinita de chispas de colores", scores: { sugar: 3 } },
-          { text: "Teleportarme a un bosque de frutas", scores: { jungle: 3 } },
-          { text: "Convertir todo en arequipe cremoso", scores: { monkey: 3 } },
-          { text: "Llenar el mundo de galletas crujientes", scores: { dulce: 3 } }
-        ]
-      },
-      {
-        q: "3. ¿Qué fruta define mejor tu personalidad? 🍓🍌🥝🍑",
-        options: [
-          { text: "Fresa: Intensa y brillante", scores: { sugar: 3 } },
-          { text: "Banano: Suave y divertido", scores: { monkey: 3 } },
-          { text: "Kiwi: Ácido y refrescante", scores: { jungle: 3 } },
-          { text: "Durazno: Dulce y elegante", scores: { dulce: 3 } }
-        ]
-      },
-      {
-        q: "4. Escoge tu vibra ideal para un fin de semana: 🎈",
-        options: [
-          { text: "Fiesta de cumpleaños llena de luces", scores: { sugar: 3 } },
-          { text: "Picnic al aire libre rodeado de naturaleza", scores: { jungle: 3 } },
-          { text: "Maratón de películas en pijama", scores: { dulce: 3 } },
-          { text: "Tarde de juegos de mesa entre amigos", scores: { monkey: 3 } }
-        ]
-      },
-      {
-        q: "5. ¿Cuál es tu textura crujiente favorita en un postre? 🍪",
-        options: [
-          { text: "Chispitas coloridas y festivas", scores: { sugar: 3 } },
-          { text: "Galleta Oreo chocolateada", scores: { dulce: 3 } },
-          { text: "Chips de chocolate real", scores: { monkey: 3 } },
-          { text: "Galleta de vainilla bien triturada", scores: { jungle: 3 } }
-        ]
-      },
-      {
-        q: "6. ¿Qué clima te pone de mejor humor? 🌤️",
-        options: [
-          { text: "Sol brillante y radiante", scores: { sugar: 2, jungle: 2 } },
-          { text: "Tarde fresca de otoño", scores: { monkey: 3 } },
-          { text: "Día lluvioso acurrucado en casa", scores: { dulce: 3 } },
-          { text: "Mañana tropical y húmeda", scores: { jungle: 3 } }
-        ]
-      },
-      {
-        q: "7. Elige un topping líquido irrechazable: 🍯",
-        options: [
-          { text: "Salsa de chocolate negro espeso", scores: { sugar: 3 } },
-          { text: "Arequipe tradicional suave", scores: { monkey: 3 } },
-          { text: "Leche condensada extra dulce", scores: { dulce: 3 } },
-          { text: "Glacé agridulce de mora fresca", scores: { jungle: 3 } }
-        ]
-      },
-      {
-        q: "8. ¿Qué emoji usas con más frecuencia? 🎭",
-        options: [
-          { text: "🥳 ¡Fiesta total!", scores: { sugar: 3 } },
-          { text: "🐵 ¡Aventura y travesuras!", scores: { monkey: 3 } },
-          { text: "🥰 ¡Puro amor y dulzura!", scores: { dulce: 3 } },
-          { text: "🌿 ¡Naturaleza y frescura!", scores: { jungle: 3 } }
-        ]
-      },
-      {
-        q: "9. ¿Qué tipo de música te acompaña mejor hoy? 🎵",
-        options: [
-          { text: "Pop alegre y movido", scores: { sugar: 3 } },
-          { text: "Reggae o música acústica relajada", scores: { jungle: 3 } },
-          { text: "Lo-Fi suave para descansar", scores: { dulce: 3 } },
-          { text: "Funk/Jazz rítmico y divertido", scores: { monkey: 3 } }
-        ]
-      },
-      {
-        q: "10. ¿Cómo prefieres acompañar tus tardes? ☕",
-        options: [
-          { text: "Con una malteada colorida", scores: { sugar: 3 } },
-          { text: "Un frappé frutal bien frío", scores: { jungle: 3 } },
-          { text: "Un café con leche súper cremoso", scores: { monkey: 3 } },
-          { text: "Un vaso de leche con galletas", scores: { dulce: 3 } }
-        ]
-      },
-      {
-        q: "11. Si pudieras viajar ya mismo, ¿a dónde irías? ✈️",
-        options: [
-          { text: "Un parque de atracciones vibrante", scores: { sugar: 3 } },
-          { text: "Una selva tropical exótica", scores: { jungle: 3 } },
-          { text: "Una pequeña cabaña en las montañas", scores: { dulce: 3 } },
-          { text: "Un café vintage en la ciudad", scores: { monkey: 3 } }
-        ]
-      },
-      {
-        q: "12. ¿Qué buscas principalmente al comer un waffle? 🤤",
-        options: [
-          { text: "Explosión intensa de sabores", scores: { sugar: 3 } },
-          { text: "Cremosidad envolvente y suave", scores: { dulce: 3 } },
-          { text: "Un contraste de dulzor equilibrado", scores: { monkey: 3 } },
-          { text: "Un toque ácido y natural", scores: { jungle: 3 } }
-        ]
-      },
-      {
-        q: "13. ¿Cuál es tu color de antojo hoy? 🎨",
-        options: [
-          { text: "Rojo intenso e inolvidable", scores: { sugar: 3 } },
-          { text: "Verde vibrante y lleno de vida", scores: { jungle: 3 } },
-          { text: "Dorado cálido como el arequipe", scores: { monkey: 3 } },
-          { text: "Pastel suave y tierno", scores: { dulce: 3 } }
-        ]
-      },
-      {
-        q: "14. ¿Qué estilo de película te apetece ver? 🎬",
-        options: [
-          { text: "Animación colorida y fantástica", scores: { sugar: 3 } },
-          { text: "Comedia ligera para reírte a carcajadas", scores: { monkey: 3 } },
-          { text: "Romance cálido y acogedor", scores: { dulce: 3 } },
-          { text: "Aventura en lugares insólitos", scores: { jungle: 3 } }
-        ]
-      },
-      {
-        q: "15. ¿Cuál es la regla de oro de tu mesa? 🍽️",
-        options: [
-          { text: "¡Entre más colores, mejor sabe!", scores: { sugar: 3 } },
-          { text: "¡El secreto está en las salsas!", scores: { dulce: 2, monkey: 2 } },
-          { text: "¡La fruta le da el balance perfecto!", scores: { jungle: 3 } },
-          { text: "¡Siempre debe haber algo crocante!", scores: { dulce: 2, monkey: 2 } }
-        ]
-      }
-    ];
-
-    // Datos de los 4 Combos de Fluffies para el Diagnóstico
-    const comboInfo = {
-      sugar: {
-        title: "Sugar Rush 🍓🍫",
-        desc: "¡Eres pura energía y alegría! Tu personalidad vibrante combina con la frescura de la fresa, la intensidad del chocolate y la diversión de las chispas multicolor.",
-        ingredients: ["Crema", "Fresas jugosas", "Salsa de Chocolate", "Lluvia de colores"]
-      },
-      monkey: {
-        title: "Monkey Chips 🍌🍯",
-        desc: "¡Buscas el balance perfecto y divertido! Te encantan los sabores clásicos con un toque suave y crujiente de chips de chocolate con banano.",
-        ingredients: ["Crema", "Banano dulcito", "Arequipe cremoso", "Chips de chocolate"]
-      },
-      dulce: {
-        title: "Dulce Traición 🍑🍪",
-        desc: "¡Aprecias el consuelo tierno y dulce! Disfrutas de momentos acogedores con trozos de durazno, galleta Oreo triturada y dulce de leche.",
-        ingredients: ["Crema", "Durazno fresco", "Galleta Oreo", "Leche condensada"]
-      },
-      jungle: {
-        title: "Jungle Jam 🥝🫐",
-        desc: "¡Eres amante de la frescura exótica y natural! Te fascina el contraste agridulce del kiwi con el glacé de mora y el crocante de galleta.",
-        ingredients: ["Crema", "Kiwi fresco", "Glacé de Mora", "Galleta de Vainilla"]
-      }
-    };
-
-    // Variables de Estado del Quiz
-    let currentQuizQuestions = [];
-    let currentStep = 0;
-    let scores = { sugar: 0, monkey: 0, dulce: 0, jungle: 0 };
-
-    // Inicializar el Quiz Seleccionando 7-8 Preguntas Aleatorias
-    function initQuiz() {
-      // Elegir entre 7 u 8 preguntas al azar
-      const totalQuestionsCount = Math.floor(Math.random() * 2) + 7; // 7 u 8
-      
-      // Mezclar banco completo (Fisher-Yates)
-      const shuffled = [...fullQuestionBank].sort(() => 0.5 - Math.random());
-      
-      currentQuizQuestions = shuffled.slice(0, totalQuestionsCount);
-      currentStep = 0;
-      scores = { sugar: 0, monkey: 0, dulce: 0, jungle: 0 };
-
-      document.getElementById('quiz-content').classList.remove('hidden');
-      document.getElementById('quiz-result').classList.add('hidden');
-      document.getElementById('quiz-progress-container').classList.remove('hidden');
-
-      renderQuestion();
-    }
-
-    function renderQuestion() {
-      const qData = currentQuizQuestions[currentStep];
-      const total = currentQuizQuestions.length;
-
-      // Actualizar Progreso
-      document.getElementById('quiz-step-text').innerText = `Pregunta ${currentStep + 1} de ${total}`;
-      const pct = Math.round(((currentStep + 1) / total) * 100);
-      document.getElementById('quiz-bar').style.width = `${pct}%`;
-
-      // Renderizar Pregunta
-      document.getElementById('quiz-question').innerText = qData.q;
-
-      // Renderizar Opciones
-      const container = document.getElementById('quiz-options');
-      container.innerHTML = '';
-
-      qData.options.forEach((opt) => {
-        const btn = document.createElement('button');
-        btn.className = "w-full text-left bg-[#FFF0F3] hover:bg-[#FFE5EC] border-2 border-[#FFB3C1] hover:border-[#FF477E] p-3.5 rounded-2xl font-semibold text-xs sm:text-sm text-[#5C3D2E] transition-all transform hover:-translate-y-0.5";
-        btn.innerText = opt.text;
-        btn.onclick = () => selectOption(opt.scores);
-        container.appendChild(btn);
-      });
-    }
-
-    function selectOption(optScores) {
-      // Sumar puntuaciones
-      for (let key in optScores) {
-        if (scores[key] !== undefined) {
-          scores[key] += optScores[key];
+        function triggerMascotQuote() {
+            const speechText = document.getElementById('speech-text');
+            const randomQuote = mascotQuotes[Math.floor(Math.random() * mascotQuotes.length)];
+            
+            speechText.parentElement.classList.remove('animate-bounce-in');
+            void speechText.parentElement.offsetWidth;
+            speechText.parentElement.classList.add('animate-bounce-in');
+            
+            speechText.textContent = randomQuote;
         }
-      }
 
-      currentStep++;
+        // Calculadora de Adicionales
+        function calculateTotalOrder() {
+            const base = parseInt(document.getElementById('calc-base').value) || 8000;
+            const salsas = (parseInt(document.getElementById('calc-salsas').value) || 0) * 1000;
+            const frutas = (parseInt(document.getElementById('calc-frutas').value) || 0) * 2000;
+            const toppings = (parseInt(document.getElementById('calc-toppings').value) || 0) * 800;
 
-      if (currentStep < currentQuizQuestions.length) {
-        renderQuestion();
-      } else {
-        showResult();
-      }
-    }
-
-    function showResult() {
-      document.getElementById('quiz-content').classList.add('hidden');
-      document.getElementById('quiz-progress-container').classList.add('hidden');
-      document.getElementById('quiz-result').classList.remove('hidden');
-
-      // Determinar el combo ganador
-      let winnerKey = 'sugar';
-      let maxScore = -1;
-
-      for (let key in scores) {
-        if (scores[key] > maxScore) {
-          maxScore = scores[key];
-          winnerKey = key;
+            const total = base + salsas + frutas + toppings;
+            document.getElementById('calc-total').textContent = `$${total.toLocaleString('es-CO')}`;
         }
-      }
 
-      const winner = comboInfo[winnerKey];
+        // Pestanas de Ingredientes
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-fluffyPink', 'text-white');
+                btn.classList.add('bg-white', 'text-fluffyBrown');
+            });
 
-      // Calcular Porcentaje de Afinidad Simulado (entre 88% y 99%)
-      const affinity = Math.floor(Math.random() * 12) + 88;
+            document.getElementById(`content-${tabName}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-${tabName}`);
+            activeBtn.classList.remove('bg-white', 'text-fluffyBrown');
+            activeBtn.classList.add('bg-fluffyPink', 'text-white');
+        }
 
-      document.getElementById('result-title').innerText = winner.title;
-      document.getElementById('result-match').innerText = `✨ ${affinity}% de Afinidad ✨`;
-      document.getElementById('result-desc').innerText = winner.desc;
+        // Datos de Combos
+        const comboData = {
+            'sugar-rush': {
+                title: 'Sugar Rush 🍓',
+                subtitle: '¡Dulzura en cada bocado!',
+                price: '$8.000 (Grande)',
+                description: 'La combinación perfecta para los amantes de las fresas frescas. Un balance dulce y ácido cubierto con generosa crema batida, hilos de chocolate y un divertido toque de lluvia de colores.',
+                ingredients: ['Crema batida', 'Fresas Frescas', 'Salsa de Chocolate', 'Lluvia de Colores']
+            },
+            'monkey-chips': {
+                title: 'Monkey Chips 🍌',
+                subtitle: '¡El balance perfecto!',
+                price: '$8.000 (Grande)',
+                description: 'Inspirado en los mejores sabores del banano con arequipe criollo. Servido con chispas de chocolate semi-amargo que contrastan deliciosamente.',
+                ingredients: ['Crema batida', 'Banano en Rodajas', 'Arequipe Tradicional', 'Chips de Chocolate']
+            },
+            'dulce-traicion': {
+                title: 'Dulce Traición 🍑',
+                subtitle: '¡Un combo irresistible!',
+                price: '$8.000 (Grande)',
+                description: 'Trozos jugosos de durazno bañados en suave leche condensada con crocantes trozos de galleta Oreo original.',
+                ingredients: ['Crema batida', 'Durazno Jugoso', 'Leche Condensada', 'Galleta Oreo']
+            },
+            'jungle-jam': {
+                title: 'Jungle Jam 🥝',
+                subtitle: '¡Frescura y mucho sabor!',
+                price: '$8.000 (Grande)',
+                description: 'Una explosión silvestre de kiwi fresco sobre nuestro glacé artesanal de mora y lluvia de galleta de vainilla crujiente.',
+                ingredients: ['Crema batida', 'Kiwi Fresco', 'Glasé de Mora', 'Galleta Triturada']
+            }
+        };
 
-      const ingList = document.getElementById('result-ingredients');
-      ingList.innerHTML = '';
-      winner.ingredients.forEach(ing => {
-        const li = document.createElement('li');
-        li.className = "flex items-center gap-1.5";
-        li.innerHTML = `<span class="text-[#FF477E]">✔</span> ${ing}`;
-        ingList.appendChild(li);
-      });
+        function openComboModal(comboKey) {
+            const combo = comboData[comboKey];
+            if (!combo) return;
 
-      // Lanzar Confeti Festivo
-      if (typeof confetti === 'function') {
-        confetti({
-          particleCount: 70,
-          spread: 60,
-          origin: { y: 0.7 }
-        });
-      }
-    }
+            const modalContent = document.getElementById('modal-content');
+            modalContent.innerHTML = `
+                <div class="text-center">
+                    <span class="text-fluffyDarkPink font-bold text-xs uppercase bg-fluffySoftPink px-3 py-1 rounded-full">${combo.subtitle}</span>
+                    <h3 class="text-3xl font-bold text-fluffyBrown mt-2">${combo.title}</h3>
+                    <p class="text-2xl font-heading font-bold text-fluffyDarkPink my-2">${combo.price}</p>
+                    <p class="text-xs text-fluffyBrown/80 mb-4 leading-relaxed">${combo.description}</p>
+                    
+                    <div class="bg-fluffyCream p-3 rounded-2xl border border-fluffySoftPink mb-4 text-left">
+                        <h4 class="text-xs font-bold text-fluffyDarkPink mb-2 uppercase">Ingredientes Incluidos:</h4>
+                        <ul class="text-xs text-fluffyBrown space-y-1">
+                            ${combo.ingredients.map(ing => `<li class="flex items-center gap-1.5"><i class="fa-solid fa-heart text-fluffyPink"></i> ${ing}</li>`).join('')}
+                        </ul>
+                    </div>
 
-    function restartQuiz() {
-      initQuiz();
-    }
+                    <button onclick="closeComboModal()" class="w-full bg-fluffyPink hover:bg-fluffyDarkPink text-white font-bold py-2.5 rounded-2xl transition-colors">
+                        ¡Entendido! 💕
+                    </button>
+                </div>
+            `;
+            document.getElementById('combo-modal').classList.remove('hidden');
+        }
 
-    // --- 2. MASCOTA FLUFFY INTERACTIVA ---
-    const fluffyPhrases = [
-      "¡Hola! Soy Fluffy 🐻💖 ¿Sabías que los waffles pequeños vienen en forma de Corazón o Círculo?",
-      "¡Un detalle dulce alegra cualquier día! 🍓",
-      "¡Mi combo preferido es el que lleve bastante crema! 🤤",
-      "¿Sabías que puedes pedir adiciones de fruta por solo $2.000? 🥝",
-      "¡Haz el test interactivo arriba y adivinaré tu sabor ideal! 🔮"
-    ];
+        function closeComboModal() {
+            document.getElementById('combo-modal').classList.add('hidden');
+        }
 
-    function speakFluffy() {
-      const dialog = document.getElementById('fluffy-dialog');
-      const randomMsg = fluffyPhrases[Math.floor(Math.random() * fluffyPhrases.length)];
-      
-      dialog.classList.add('scale-95', 'opacity-50');
-      setTimeout(() => {
-        dialog.innerHTML = `<p class="text-sm font-semibold text-[#5C3D2E]">${randomMsg}</p>`;
-        dialog.classList.remove('scale-95', 'opacity-50');
-      }, 150);
-    }
+        // ==========================================
+        // BANCO DE 15 PREGUNTAS ALEATORIAS (RANDOM QUIZ ENGINE)
+        // ==========================================
+        const questionBank = [
+            {
+                q: "1. Si pudieras viajar en el tiempo este fin de semana, ¿a dónde irías?",
+                options: [
+                    { label: "🏰 A una fiesta de gala en un palacio clásico", score: { 'dulce-traicion': 3, 'sugar-rush': 1 } },
+                    { label: "🌴 A una isla tropical inexplorada", score: { 'jungle-jam': 3, 'monkey-chips': 1 } },
+                    { label: "🎡 A una feria de atracciones retro con fuegos artificiales", score: { 'sugar-rush': 3, 'monkey-chips': 1 } },
+                    { label: "☕ A una cabaña tranquila en el bosque", score: { 'monkey-chips': 3, 'dulce-traicion': 1 } }
+                ]
+            },
+            {
+                q: "2. ¿Qué súper poder elegirías para tu día a día?",
+                options: [
+                    { label: "⚡ Moverte a súper velocidad y contagiar alegría", score: { 'sugar-rush': 3 } },
+                    { label: "🧠 Leer mentes y saber exactamente qué quiere cada quien", score: { 'dulce-traicion': 3 } },
+                    { label: "🌿 Hacer crecer plantas y frutas exóticas al instante", score: { 'jungle-jam': 3 } },
+                    { label: "🧸 Dar abrazos mágicos que quitan el estrés", score: { 'monkey-chips': 3 } }
+                ]
+            },
+            {
+                q: "3. ¿Qué clima o momento del día te llena de energía?",
+                options: [
+                    { label: "☀️ Mañana radiante con sol brillante", score: { 'sugar-rush': 2, 'jungle-jam': 1 } },
+                    { label: "🌅 Atardecer cálido dorado", score: { 'monkey-chips': 2, 'dulce-traicion': 1 } },
+                    { label: "🌙 Noche estrellada bajo una cobija", score: { 'dulce-traicion': 3 } },
+                    { label: "🌧️ Mañana lluviosa con aire fresco y natural", score: { 'jungle-jam': 3 } }
+                ]
+            },
+            {
+                q: "4. ¿Cuál de estos emojis usas más seguido?",
+                options: [
+                    { label: "💖 o 🌈 (Amor, colores y chispas)", score: { 'sugar-rush': 3 } },
+                    { label: "🐒 o 🍫 (Tierno, relajado y dulcero)", score: { 'monkey-chips': 3 } },
+                    { label: "✨ o 👑 (Consentidor y elegante)", score: { 'dulce-traicion': 3 } },
+                    { label: "🍃 o 🦋 (Fresco, natural y libre)", score: { 'jungle-jam': 3 } }
+                ]
+            },
+            {
+                q: "5. ¿Qué tipo de película o serie prefieres ver hoy?",
+                options: [
+                    { label: "🎬 Comedia romántica alegre con final feliz", score: { 'sugar-rush': 2, 'dulce-traicion': 1 } },
+                    { label: "🍿 Animación familiar tierna y divertida", score: { 'monkey-chips': 3 } },
+                    { label: "🎭 Drama sofisticado con giros de guión", score: { 'dulce-traicion': 3 } },
+                    { label: "🧭 Aventura y exploración fantástica", score: { 'jungle-jam': 3 } }
+                ]
+            },
+            {
+                q: "6. Si organizaras una fiesta con tus amigos, ¿cuál sería el tema?",
+                options: [
+                    { label: "🎉 Neón, luces brillantes y música pop", score: { 'sugar-rush': 3 } },
+                    { label: "🎮 Noche de juegos de mesa y comida deliciosa", score: { 'monkey-chips': 3 } },
+                    { label: "🎂 Banquete elegante de postres finos", score: { 'dulce-traicion': 3 } },
+                    { label: "Camping o picnic en un parque natural", score: { 'jungle-jam': 3 } }
+                ]
+            },
+            {
+                q: "7. ¿Qué textura en los postres te fascina más?",
+                options: [
+                    { label: "🍓 Fruta fresca con crema suave", score: { 'sugar-rush': 3 } },
+                    { label: "🍌 Rodajas cremosas con salsas espesas", score: { 'monkey-chips': 3 } },
+                    { label: "🍪 Crujiente de galleta sumergido en leche dulce", score: { 'dulce-traicion': 3 } },
+                    { label: "🥝 Cítrico refrescante con crocante de vainilla", score: { 'jungle-jam': 3 } }
+                ]
+            },
+            {
+                q: "8. ¿Cuál es tu forma preferida de relajarte después de un día largo?",
+                options: [
+                    { label: "🎧 Escuchar tu playlist de música alegre", score: { 'sugar-rush': 2, 'jungle-jam': 1 } },
+                    { label: "🛋️ Acostarte a ver videos o estar en el celular", score: { 'monkey-chips': 3 } },
+                    { label: "🛁 Tomar un snack delicioso y darte un gusto", score: { 'dulce-traicion': 3 } },
+                    { label: "🧘 Tomar aire fresco o caminar un rato", score: { 'jungle-jam': 3 } }
+                ]
+            },
+            {
+                q: "9. Si fueras un color, ¿cuál serías?",
+                options: [
+                    { label: "💗 Rosado fucsia vibrante", score: { 'sugar-rush': 3 } },
+                    { label: "💛 Amarillo o dorado cálido", score: { 'monkey-chips': 3 } },
+                    { label: "🧡 Melocotón o crema elegante", score: { 'dulce-traicion': 3 } },
+                    { label: "💜 Violeta o verde esmeralda", score: { 'jungle-jam': 3 } }
+                ]
+            },
+            {
+                q: "10. ¿Qué cualidad valoran más tus amigos de ti?",
+                options: [
+                    { label: "✨ Tu energía positiva y espontaneidad", score: { 'sugar-rush': 3 } },
+                    { label: "🤝 Tu lealtad y que siempre das buenos consejos", score: { 'monkey-chips': 3 } },
+                    { label: "🎁 Que sabes consentir y tienes excelente gusto", score: { 'dulce-traicion': 3 } },
+                    { label: "🌿 Tu espíritu aventurero e ideas creativas", score: { 'jungle-jam': 3 } }
+                ]
+            },
+            {
+                q: "11. ¿Qué aroma te produce más felicidad?",
+                options: [
+                    { label: "🍓 Fresas recién cortadas y golosinas", score: { 'sugar-rush': 3 } },
+                    { label: "🍯 Arequipe caliente o panqueques recién hechos", score: { 'monkey-chips': 3 } },
+                    { label: "🥧 Galletas de mantequilla recién horneadas", score: { 'dulce-traicion': 3 } },
+                    { label: "🍇 Frutos del bosque y mermelada casera", score: { 'jungle-jam': 3 } }
+                ]
+            },
+            {
+                q: "12. ¿Cómo prefieres tu bebida o malteada?",
+                options: [
+                    { label: "🥤 Llena de toppings coloridos y crema por encima", score: { 'sugar-rush': 3 } },
+                    { label: "🥛 Espesa, con bastante arequipe y chispas", score: { 'monkey-chips': 3 } },
+                    { label: "🍨 Con trozos de galleta y leche condensada", score: { 'dulce-traicion': 3 } },
+                    { label: "🍹 Agitada con frutas acidas y hielo picado", score: { 'jungle-jam': 3 } }
+                ]
+            },
+            {
+                q: "13. ¿Qué regalarías en un cumpleaños especial?",
+                options: [
+                    { label: "🎈 Una caja sorpresa llena de detalles y colores", score: { 'sugar-rush': 3 } },
+                    { label: "🧸 Un peluche afelpado y cosas acogedoras", score: { 'monkey-chips': 3 } },
+                    { label: "🍫 Una caja premium de bombones y galletas", score: { 'dulce-traicion': 3 } },
+                    { label: "🎟️ Una experiencia o viaje corto de fin de semana", score: { 'jungle-jam': 3 } }
+                ]
+            },
+            {
+                q: "14. ¿Cuál de estas palabras describe tu antojo actual?",
+                options: [
+                    { label: "💖 ¡Dulzura festiva y chispas!", score: { 'sugar-rush': 3 } },
+                    { label: "🍌 ¡Suave, clásico y reconfortante!", score: { 'monkey-chips': 3 } },
+                    { label: "🍑 ¡Súper cremoso e irresistible!", score: { 'dulce-traicion': 3 } },
+                    { label: "🥝 ¡Agridulce, crujiente y silvestre!", score: { 'jungle-jam': 3 } }
+                ]
+            },
+            {
+                q: "15. Elige la foto perfecta para publicar en Instagram:",
+                options: [
+                    { label: "📸 Un postre super colorido lleno de sprinkles", score: { 'sugar-rush': 3 } },
+                    { label: "📸 Un café con waffles y ambiente hogareño", score: { 'monkey-chips': 3 } },
+                    { label: "📸 Un plano detalle de galletería fina", score: { 'dulce-traicion': 3 } },
+                    { label: "📸 Una foto en la naturaleza disfrutando frutas", score: { 'jungle-jam': 3 } }
+                ]
+            }
+        ];
 
-    // --- 3. CALCULADORA DE PEDIDO Y EXTRAS ---
-    let extraQty = {
-      salsas: 0,
-      frutas: 0,
-      toppings: 0
-    };
+        // Estado del Quiz
+        let activeQuestions = [];
+        let currentQuestionIndex = 0;
+        let quizScores = {
+            'sugar-rush': 0,
+            'monkey-chips': 0,
+            'dulce-traicion': 0,
+            'jungle-jam': 0
+        };
+        let winningComboKey = '';
 
-    const extraPrices = {
-      salsas: 1000,
-      frutas: 2000,
-      toppings: 800
-    };
+        // Función para seleccionar aleatoriamente 7 u 8 preguntas
+        function initializeRandomQuiz() {
+            // Mezclar preguntas
+            const shuffled = [...questionBank].sort(() => 0.5 - Math.random());
+            
+            // Determinar si serán 7 u 8 preguntas en este intento
+            const totalQuestionsCount = Math.random() < 0.5 ? 7 : 8;
+            activeQuestions = shuffled.slice(0, totalQuestionsCount);
 
-    function changeExtra(type, delta) {
-      extraQty[type] = Math.max(0, extraQty[type] + delta);
-      document.getElementById(`qty-${type}`).innerText = extraQty[type];
-      calculateTotal();
-    }
+            currentQuestionIndex = 0;
+            quizScores = { 'sugar-rush': 0, 'monkey-chips': 0, 'dulce-traicion': 0, 'jungle-jam': 0 };
+            winningComboKey = '';
 
-    function calculateTotal() {
-      const baseSelect = document.getElementById('calc-base');
-      const [basePriceStr, baseName] = baseSelect.value.split('|');
-      const basePrice = parseInt(basePriceStr, 10);
+            document.getElementById('quiz-result').classList.add('hidden');
+            document.getElementById('quiz-progress-bar').classList.remove('hidden');
+            document.getElementById('quiz-question-counter').classList.remove('hidden');
+            document.getElementById('quiz-container').classList.remove('hidden');
 
-      const salsasTotal = extraQty.salsas * extraPrices.salsas;
-      const frutasTotal = extraQty.frutas * extraPrices.frutas;
-      const toppingsTotal = extraQty.toppings * extraPrices.toppings;
+            renderQuestion();
+        }
 
-      const grandTotal = basePrice + salsasTotal + frutasTotal + toppingsTotal;
+        function renderQuestion() {
+            const container = document.getElementById('quiz-container');
+            const q = activeQuestions[currentQuestionIndex];
 
-      // Actualizar vista resumen
-      document.getElementById('summary-base-name').innerText = baseName;
-      document.getElementById('summary-base-price').innerText = `$${basePrice.toLocaleString()}`;
+            // Progress bar Fill
+            const progressPct = ((currentQuestionIndex + 1) / activeQuestions.length) * 100;
+            document.getElementById('quiz-progress-fill').style.width = `${progressPct}%`;
+            document.getElementById('quiz-question-counter').textContent = `Pregunta ${currentQuestionIndex + 1} de ${activeQuestions.length}`;
 
-      document.getElementById('summary-salsas-text').innerText = `${extraQty.salsas} Salsa(s) extra`;
-      document.getElementById('summary-salsas-price').innerText = `$${salsasTotal.toLocaleString()}`;
+            container.innerHTML = `
+                <div class="animate-bounce-in">
+                    <h3 class="text-lg sm:text-xl font-bold text-fluffyBrown mb-6">${q.q}</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        ${q.options.map((opt, idx) => `
+                            <button onclick="answerQuestion(${idx})" class="bg-white hover:bg-fluffyPink hover:text-white p-4 rounded-2xl font-bold text-xs sm:text-sm text-fluffyBrown border-2 border-fluffyPink shadow-sm transition-all text-left flex items-center justify-between group">
+                                <span class="pr-2">${opt.label}</span>
+                                <i class="fa-solid fa-chevron-right text-xs opacity-40 group-hover:opacity-100 group-hover:translate-x-1 transition-all"></i>
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
 
-      document.getElementById('summary-frutas-text').innerText = `${extraQty.frutas} Fruta(s) extra`;
-      document.getElementById('summary-frutas-price').innerText = `$${frutasTotal.toLocaleString()}`;
+        function answerQuestion(optionIdx) {
+            const selectedOpt = activeQuestions[currentQuestionIndex].options[optionIdx];
+            
+            // Sumar puntajes
+            for (const [key, val] of Object.entries(selectedOpt.score)) {
+                quizScores[key] = (quizScores[key] || 0) + val;
+            }
 
-      document.getElementById('summary-toppings-text').innerText = `${extraQty.toppings} Topping(s) extra`;
-      document.getElementById('summary-toppings-price').innerText = `$${toppingsTotal.toLocaleString()}`;
+            currentQuestionIndex++;
 
-      document.getElementById('calc-total').innerText = `$${grandTotal.toLocaleString()}`;
-    }
+            if (currentQuestionIndex < activeQuestions.length) {
+                renderQuestion();
+            } else {
+                calculateQuizResult();
+            }
+        }
 
-    function sendWhatsApp() {
-      const baseSelect = document.getElementById('calc-base');
-      const [, baseName] = baseSelect.value.split('|');
-      const total = document.getElementById('calc-total').innerText;
+        function calculateQuizResult() {
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('quiz-progress-bar').classList.add('hidden');
+            document.getElementById('quiz-question-counter').classList.add('hidden');
+            
+            // Determinar ganador
+            let maxScore = -1;
+            let totalScorePoints = 0;
+            let winner = 'sugar-rush';
 
-      let msg = `¡Hola Fluffies! 🧇 Me gustaría realizar un pedido:\n\n`;
-      msg += `• *Producto Base:* ${baseName}\n`;
-      if (extraQty.salsas > 0) msg += `• *Salsas Extra:* ${extraQty.salsas}\n`;
-      if (extraQty.frutas > 0) msg += `• *Frutas Extra:* ${extraQty.frutas}\n`;
-      if (extraQty.toppings > 0) msg += `• *Toppings Extra:* ${extraQty.toppings}\n`;
-      msg += `\n*Total Estimado:* ${total}\n\n¿Me ayudan a confirmarlo? 😊`;
+            for (const [key, score] of Object.entries(quizScores)) {
+                totalScorePoints += score;
+                if (score > maxScore) {
+                    maxScore = score;
+                    winner = key;
+                }
+            }
 
-      const encoded = encodeURIComponent(msg);
-      window.open(`https://wa.me/?text=${encoded}`, '_blank');
-    }
+            // Calcular porcentaje de afinidad realista (ej. entre 88% y 99%)
+            const rawRatio = maxScore / (totalScorePoints || 1);
+            const matchPercentage = Math.min(99, Math.max(88, Math.round(75 + (rawRatio * 25))));
 
-    // Inicializaciones al cargar la página
-    window.addEventListener('DOMContentLoaded', () => {
-      initQuiz();
-      calculateTotal();
-    });
-  </script>
+            winningComboKey = winner;
+            const combo = comboData[winner];
+
+            const iconsMap = {
+                'sugar-rush': '🍓',
+                'monkey-chips': '🍌',
+                'dulce-traicion': '🍑',
+                'jungle-jam': '🥝'
+            };
+
+            document.getElementById('quiz-icon').textContent = iconsMap[winner];
+            document.getElementById('quiz-match-badge').textContent = `⚡ ${matchPercentage}% de Afinidad Con tu Personalidad`;
+            document.getElementById('quiz-recommendation-title').textContent = `¡Tu Waffle Gemelo es ${combo.title}!`;
+            document.getElementById('quiz-recommendation-desc').textContent = combo.description;
+
+            const ingList = document.getElementById('quiz-recommendation-ingredients');
+            ingList.innerHTML = combo.ingredients.map(i => `<span class="inline-block bg-fluffySoftPink text-fluffyDarkPink font-bold px-3 py-1 rounded-full text-xs mr-1.5 mb-1.5 border border-pink-200">✓ ${i}</span>`).join('');
+
+            document.getElementById('quiz-result').classList.remove('hidden');
+        }
+
+        function openResultModal() {
+            if (winningComboKey) {
+                openComboModal(winningComboKey);
+            }
+        }
+
+        function resetQuiz() {
+            initializeRandomQuiz();
+        }
+
+        // Canvas Animación Sprinkles
+        const canvas = document.getElementById('sprinkles-bg');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const sprinkles = [];
+        const colors = ['#FF8DA1', '#FFD166', '#FFE5EC', '#C77DFF', '#E84A5F'];
+
+        for (let i = 0; i < 40; i++) {
+            sprinkles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 6 + 4,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                speedY: Math.random() * 0.6 + 0.2,
+                rotation: Math.random() * Math.PI * 2,
+                rotSpeed: (Math.random() - 0.5) * 0.02
+            });
+        }
+
+        function animateSprinkles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            sprinkles.forEach(s => {
+                s.y += s.speedY;
+                s.rotation += s.rotSpeed;
+
+                if (s.y > canvas.height) {
+                    s.y = -10;
+                    s.x = Math.random() * canvas.width;
+                }
+
+                ctx.save();
+                ctx.translate(s.x, s.y);
+                ctx.rotate(s.rotation);
+                ctx.fillStyle = s.color;
+                ctx.beginPath();
+                ctx.roundRect(-s.size / 2, -s.size / 4, s.size, s.size / 2, 3);
+                ctx.fill();
+                ctx.restore();
+            });
+
+            requestAnimationFrame(animateSprinkles);
+        }
+
+        window.onload = function() {
+            animateSprinkles();
+            initializeRandomQuiz();
+        };
+    </script>
 </body>
 </html>
